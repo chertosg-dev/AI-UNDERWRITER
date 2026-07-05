@@ -1,8 +1,8 @@
-# AI Underwriter
+# AI Underwriter v3.0 Mobile
 
-Static GitHub Pages version.
+Καθαρή mobile-first έκδοση για GitHub Pages.
 
-Files to publish:
+Ανεβάζεις στο repository τα αρχεία μέσα από τον φάκελο:
 - index.html
 - styles.css
 - app.js
@@ -11,5 +11,7 @@ Files to publish:
 - icon-192.png
 - icon-512.png
 - .nojekyll
+- README.md
 
-Do not upload old START_*.command or START_*.bat files for GitHub Pages.
+Μετά άνοιξε:
+https://chertosg-dev.github.io/AI-UNDERWRITER/?v=30

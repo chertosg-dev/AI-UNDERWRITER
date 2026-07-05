@@ -2,209 +2,111 @@
 <html lang="el">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AI Underwriter | Εθνική Ασφαλιστική</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <title>AI Underwriter</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="app">
-    <header>
-      <div>
-        <h1>🔥 AI Underwriter</h1>
-        <p>Mobile οδηγός ανάληψης κινδύνου — Πυρός</p>
-      </div>
-      <span class="badge">Εθνική Ασφαλιστική</span>
-    </header>
+  <header class="app-header">
+    <div>
+      <p class="eyebrow">Εθνική Ασφαλιστική</p>
+      <h1>AI Underwriter</h1>
+    </div>
+    <span class="version">v3.0</span>
+  </header>
 
+  <main class="app-shell">
+    <nav class="top-tabs" aria-label="Κλάδοι">
+      <button class="tab active" data-section="home">🏠 Κατοικία</button>
+      <button class="tab" data-section="business">🏢 Επιχείρηση</button>
+      <button class="tab" data-section="vip">⭐ VIP</button>
+    </nav>
 
-    <section class="mobile-hero compact-hero" aria-label="Γρήγορη πρόσβαση">
+    <section id="section-home" class="section active-section">
       <div class="hero-card">
-        <span class="hero-kicker">Εθνική Ασφαλιστική</span>
-        <h2>Οδηγός ανάληψης κινδύνου Πυρός</h2>
-        <p>Επίλεξε ενότητα και δες καθαρά τους κανόνες, τις καλύψεις, τα όρια και τις απαλλαγές.</p>
+        <h2>Κατοικία</h2>
+        <p>Οδηγός ανάληψης, καλύψεις, όρια και απαλλαγές Full Home.</p>
       </div>
-      <div class="quick-cards">
-        <button class="quick-card" onclick="switchSection('home')"><strong>🏠 Κατοικία</strong><small>Κανόνες & πακέτα</small></button>
-        <button class="quick-card" onclick="switchSection('business')"><strong>🏢 Επιχείρηση</strong><small>Έλεγχοι ανάληψης</small></button>
-        <button class="quick-card" onclick="switchSection('vip')"><strong>⭐ VIP</strong><small>Κατά Παντός Κινδύνου</small></button>
+      <div class="action-grid">
+        <button class="action-card" data-view="home-wizard">Νέα Ανάληψη <span>Ερωτήσεις κινδύνου</span></button>
+        <button class="action-card" data-view="home-coverages">Καλύψεις <span>Basic / Extra / Advanced / Max</span></button>
+      </div>
+      <div id="home-wizard" class="view active-view">
+        <article class="panel">
+          <h3>1. Στοιχεία κατοικίας</h3>
+          <label>Χρήση κατοικίας<select id="hUsage"><option>Κύρια κατοικία</option><option>Εξοχική κατοικία</option><option>Airbnb / Βραχυχρόνια μίσθωση</option><option>Μακροχρόνια ενοικίαση</option></select></label>
+          <label>Έτος κατασκευής<input id="hYear" inputmode="numeric" placeholder="π.χ. 1985" /></label>
+          <label>Ασφαλιζόμενα αντικείμενα<select id="hInsured"><option>Οικοδομή</option><option>Περιεχόμενο</option><option>Οικοδομή και Περιεχόμενο</option></select></label>
+        </article>
+        <article class="panel">
+          <h3>2. Έλεγχοι ανάληψης</h3>
+          <div class="check-list">
+            <label><input type="checkbox" id="hWood"> Ξύλινη κατοικία</label>
+            <label><input type="checkbox" id="hStone"> Πέτρινη / διατηρητέα</label>
+            <label><input type="checkbox" id="hCave"> Υπόσκαφο</label>
+            <label><input type="checkbox" id="hForest"> Δασική ή απομονωμένη περιοχή</label>
+            <label><input type="checkbox" id="hBad"> Εγκαταλελειμμένη ή κακή συντήρηση</label>
+            <label><input type="checkbox" id="hEarthquake"> Ζητείται σεισμός</label>
+            <label><input type="checkbox" id="hTheft"> Ζητείται κλοπή περιεχομένου</label>
+          </div>
+          <button class="primary" id="runHome">Ανάλυση κινδύνου</button>
+        </article>
+        <article id="homeResult" class="result hidden"></article>
+      </div>
+      <div id="home-coverages" class="view">
+        <article class="panel sticky-panel">
+          <h3>Καλύψεις κατοικίας</h3>
+          <p class="hint">Διάλεξε πακέτο. Στο κινητό εμφανίζεται μία λίστα για να μη μπερδεύονται οι στήλες.</p>
+          <select id="homePackage" class="big-select"><option>Basic</option><option>Extra</option><option>Advanced</option><option>Max</option><option>Προαιρετικές</option></select>
+        </article>
+        <div id="homeCoverageList" class="coverage-list"></div>
       </div>
     </section>
-    <nav class="top-menu" aria-label="Κύριο μενού">
-      <button class="tab active" data-section="home" onclick="switchSection('home')">🏠 Κατοικία</button>
-      <button class="tab" data-section="business" onclick="switchSection('business')">🏢 Επιχείρηση</button>
-      <button class="tab" data-section="vip" onclick="switchSection('vip')">⭐ VIP πακέτο</button>
-    </nav>
 
-    <main>
-      <section id="section-home" class="section active-section">
-        <div class="grid">
-          <section class="card">
-            <div class="step-title"><span>1</span><h2>Στοιχεία κατοικίας</h2></div>
-            <label>Χρήση κατοικίας
-              <select id="usage">
-                <option>Κύρια κατοικία</option>
-                <option>Εξοχική κατοικία</option>
-                <option>Airbnb / Βραχυχρόνια μίσθωση</option>
-                <option>Μακροχρόνια μίσθωση</option>
-              </select>
-            </label>
-            <label>Έτος κατασκευής
-              <input id="year" type="number" placeholder="π.χ. 1985" />
-            </label>
-            <label>Τύπος
-              <select id="type">
-                <option>Διαμέρισμα</option>
-                <option>Μονοκατοικία</option>
-                <option>Μεζονέτα</option>
-                <option>Άλλο</option>
-              </select>
-            </label>
-            <label>Ασφαλιζόμενα αντικείμενα
-              <select id="insured">
-                <option>Οικοδομή</option>
-                <option>Περιεχόμενο</option>
-                <option>Οικοδομή και Περιεχόμενο</option>
-              </select>
-            </label>
-          </section>
+    <section id="section-business" class="section">
+      <div class="hero-card"><h2>Επιχείρηση</h2><p>Κανόνες ανάληψης και καλύψεις για Εθνική & Επιχείρηση.</p></div>
+      <div class="action-grid">
+        <button class="action-card" data-view="business-rules">Κανόνες Ανάληψης <span>Άδεια, πυροπροστασία, κλοπή</span></button>
+        <button class="action-card" data-view="business-coverages">Καλύψεις <span>Απλό / Πλήρες / Plus</span></button>
+      </div>
+      <div id="business-rules" class="view active-view">
+        <article class="panel"><h3>Έλεγχοι πριν την προσφορά</h3><div class="rule-list" id="businessRules"></div></article>
+      </div>
+      <div id="business-coverages" class="view">
+        <article class="panel sticky-panel"><h3>Καλύψεις επιχείρησης</h3><select id="businessProduct" class="big-select"><option value="simple">Εθνική & Επιχείρηση</option><option value="plus">Εθνική & Επιχείρηση PLUS</option></select><select id="businessPackage" class="big-select"><option>Απλό</option><option>Πλήρες</option><option>Προαιρετικές</option></select></article>
+        <div id="businessCoverageList" class="coverage-list"></div>
+      </div>
+    </section>
 
-          <section class="card">
-            <div class="step-title"><span>2</span><h2>Ερωτήσεις ανάληψης</h2></div>
-            <div class="checks">
-              <label><input type="checkbox" id="wooden"> Ξύλινη κατοικία</label>
-              <label><input type="checkbox" id="stone"> Πέτρινη κατοικία</label>
-              <label><input type="checkbox" id="listed"> Διατηρητέο</label>
-              <label><input type="checkbox" id="cave"> Υπόσκαφο</label>
-              <label><input type="checkbox" id="forest"> Σε δασική / απομονωμένη περιοχή</label>
-              <label><input type="checkbox" id="bad"> Εγκαταλελειμμένη ή κακή συντήρηση</label>
-              <label><input type="checkbox" id="earthquake"> Ζητείται σεισμός</label>
-              <label><input type="checkbox" id="theft"> Ζητείται κλοπή περιεχομένου</label>
-            </div>
-          </section>
+    <section id="section-vip" class="section">
+      <div class="hero-card"><h2>VIP πακέτο</h2><p>Κατά Παντός Κινδύνου κατοικίας για υψηλά ασφαλιζόμενα κεφάλαια.</p></div>
+      <div class="action-grid"><button class="action-card" data-view="vip-rules">Κανόνες Ανάληψης <span>Όρια και προϋποθέσεις</span></button><button class="action-card" data-view="vip-coverages">Καλύψεις <span>Όρια / απαλλαγές</span></button></div>
+      <div id="vip-rules" class="view active-view"><article class="panel"><h3>Βασικοί κανόνες VIP</h3><div class="rule-list" id="vipRules"></div></article></div>
+      <div id="vip-coverages" class="view"><article class="panel sticky-panel"><h3>Καλύψεις VIP</h3><select id="vipPackage" class="big-select"><option>VIP</option><option>Προαιρετικές</option></select></article><div id="vipCoverageList" class="coverage-list"></div></div>
+    </section>
+  </main>
 
-          <section class="card wide">
-            <div class="step-title"><span>3</span><h2>Καλύψεις κατοικίας ανά πακέτο</h2></div>
-            <p class="muted">Πάτησε πάνω στην κάλυψη για όριο κάλυψης και απαλλαγές.</p>
-            <div id="homeCoverages" class="package-grid"></div>
-          </section>
+  <nav class="bottom-nav" aria-label="Γρήγορη πλοήγηση">
+    <button class="bottom-tab active" data-section="home">🏠<span>Κατοικία</span></button>
+    <button class="bottom-tab" data-section="business">🏢<span>Επιχείρηση</span></button>
+    <button class="bottom-tab" data-section="vip">⭐<span>VIP</span></button>
+  </nav>
 
-          <section class="card wide result-card">
-            <div class="actions">
-              <h2>Αποτέλεσμα AI Underwriter</h2>
-              <button class="primary-action" onclick="runUnderwriting()">📌 Τι να προσέξω / Ανάλυση</button>
-            </div>
-            <div id="result" class="result muted">Συμπλήρωσε τα στοιχεία και πάτησε «Ανάλυση κινδύνου».</div>
-          </section>
-        </div>
-      </section>
-
-      <section id="section-business" class="section">
-        <div class="grid">
-          <section class="card wide">
-            <h2>🏢 Επιχείρηση</h2>
-            <p class="muted">Περιλαμβάνει τα προϊόντα «Εθνική & Επιχείρηση» και «Εθνική & Επιχείρηση PLUS». Πάτησε πάνω σε κάθε κάλυψη για όριο και απαλλαγές.</p>
-            <div class="info-box">
-              <b>Βασικοί έλεγχοι ανάληψης:</b> άδεια λειτουργίας όπου απαιτείται, ισχύοντα μέτρα πυροπροστασίας, κατηγορία κινδύνου/επαγγέλματος, μέτρα προστασίας για κλοπή και ιστορικό ζημιών.
-            </div>
-          </section>
-
-          <section class="card">
-            <h2>1. Στοιχεία επιχείρησης</h2>
-            <label>Προϊόν / πακέτο προς έλεγχο
-              <select id="bizProduct">
-                <option>Εθνική & Επιχείρηση</option>
-                <option>Εθνική & Επιχείρηση PLUS</option>
-              </select>
-            </label>
-            <label>Χρήση / επάγγελμα
-              <input id="bizUse" type="text" placeholder="π.χ. γραφείο, κατάστημα, αποθήκη, συνεργείο" />
-            </label>
-            <label>Ασφαλιζόμενα αντικείμενα
-              <select id="bizInsured">
-                <option>Οικοδομή</option>
-                <option>Περιεχόμενο</option>
-                <option>Οικοδομή και Περιεχόμενο</option>
-              </select>
-            </label>
-            <label>Κεφάλαιο οικοδομής (€)
-              <input id="bizBuildingCapital" type="number" placeholder="π.χ. 300000" />
-            </label>
-            <label>Κεφάλαιο περιεχομένου (€)
-              <input id="bizContentCapital" type="number" placeholder="π.χ. 150000" />
-            </label>
-          </section>
-
-          <section class="card">
-            <h2>2. Ερωτήσεις ανάληψης επιχείρησης</h2>
-            <div class="checks">
-              <label><input type="checkbox" id="bizLicense"> Υπάρχει άδεια λειτουργίας όπου απαιτείται</label>
-              <label><input type="checkbox" id="bizFireCert"> Υπάρχει/συντηρείται η προβλεπόμενη πυροπροστασία</label>
-              <label><input type="checkbox" id="bizFireCertValid"> Πιστοποιητικό Π.Υ. σε ισχύ, όπου απαιτείται</label>
-              <label><input type="checkbox" id="bizTheft"> Ζητείται κλοπή περιεχομένου</label>
-              <label><input type="checkbox" id="bizProtection"> Υπάρχουν ικανοποιητικά μέτρα προστασίας για κλοπή</label>
-              <label><input type="checkbox" id="bizEarthquake"> Ζητείται σεισμός</label>
-              <label><input type="checkbox" id="bizPre1960"> Κτίριο πριν το 1960</label>
-              <label><input type="checkbox" id="bizTerrorArea"> Περιοχή αυξημένου κινδύνου τρομοκρατικών / κέντρο Αθήνας / Εξάρχεια</label>
-              <label><input type="checkbox" id="bizMetalShutters"> Συμπαγή μεταλλικά ρολά σε όλες τις εξωτερικές πλευρές</label>
-              <label><input type="checkbox" id="bizEmbassyParty"> Πρεσβεία ή γραφείο πολιτικού κόμματος</label>
-              <label><input type="checkbox" id="bizThirdPartyContent"> Περιεχόμενο τρίτων</label>
-              <label><input type="checkbox" id="bizExcludedUse"> Εξαιρούμενη χρήση / επάγγελμα</label>
-            </div>
-          </section>
-
-          <section class="card wide result-card">
-            <div class="actions">
-              <h2>Αποτέλεσμα ανάληψης επιχείρησης</h2>
-              <button onclick="runBusinessUnderwriting()">Ανάλυση επιχείρησης</button>
-            </div>
-            <div id="businessResult" class="result muted">Συμπλήρωσε τα στοιχεία και πάτησε «Ανάλυση επιχείρησης».</div>
-          </section>
-
-          <section class="card wide">
-            <h2>Εθνική & Επιχείρηση</h2>
-            <div id="businessCoverages" class="package-grid"></div>
-          </section>
-          <section class="card wide">
-            <h2>Εθνική & Επιχείρηση PLUS</h2>
-            <div id="businessPlusCoverages" class="package-grid"></div>
-          </section>
-        </div>
-      </section>
-
-      <section id="section-vip" class="section">
-        <section class="card wide">
-          <h2>⭐ VIP πακέτο — Κατά Παντός Κινδύνου</h2>
-          <p class="muted">Για κατοικίες με συνολική ασφαλιζόμενη αξία από €300.000 έως €15.000.000. Πάτησε πάνω σε κάθε κάλυψη για όριο και απαλλαγές.</p>
-          <div class="info-box">
-            <b>Προαιρετικές καλύψεις:</b> Σεισμός και Ατομική & Οικογενειακή Αστική Ευθύνη.
-          </div>
-          <div id="vipCoverages" class="package-grid single"></div>
-        </section>
-      </section>
-    </main>
-
-    <nav class="bottom-nav" aria-label="Μενού κινητού">
-      <button class="bottom-tab active" data-section="home" onclick="switchSection('home')">🏠<span>Κατοικία</span></button>
-      <button class="bottom-tab" data-section="business" onclick="switchSection('business')">🏢<span>Επιχείρηση</span></button>
-      <button class="bottom-tab" data-section="vip" onclick="switchSection('vip')">⭐<span>VIP</span></button>
-    </nav>
-  </div>
-
-  <div id="coverageModal" class="modal hidden" aria-hidden="true">
-    <div class="modal-backdrop" onclick="closeCoverageModal()"></div>
-    <div class="modal-panel" role="dialog" aria-modal="true">
-      <button class="modal-close" onclick="closeCoverageModal()">×</button>
-      <h2 id="modalTitle">Κάλυψη</h2>
-      <table>
-        <tbody>
-          <tr><th>Όριο κάλυψης</th><td id="modalLimit"></td></tr>
-          <tr><th>Απαλλαγές</th><td id="modalDeductible"></td></tr>
-        </tbody>
-      </table>
-      <p id="modalSource" class="muted"></p>
-      <button class="source-button" onclick="showSourceHint()">📖 Προβολή πηγής</button>
+  <dialog id="modal" class="modal">
+    <div class="modal-card">
+      <button class="close" id="closeModal">×</button>
+      <h3 id="modalTitle"></h3>
+      <div class="info-table">
+        <div><strong>Όριο κάλυψης</strong><p id="modalLimit"></p></div>
+        <div><strong>Απαλλαγή</strong><p id="modalDeductible"></p></div>
+        <div><strong>Πηγή</strong><p id="modalSource"></p></div>
+      </div>
     </div>
-  </div>
+  </dialog>
+
   <script src="app.js"></script>
 </body>
 </html>
