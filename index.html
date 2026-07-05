@@ -7,7 +7,7 @@
   <title>AI Underwriter</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icon-192.png" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles-v31.css" />
 </head>
 <body>
   <header class="app-header">
@@ -15,7 +15,7 @@
       <p class="eyebrow">Εθνική Ασφαλιστική</p>
       <h1>AI Underwriter</h1>
     </div>
-    <span class="version">v3.0</span>
+    <span class="version">v3.1</span>
   </header>
 
   <main class="app-shell">
@@ -95,7 +95,7 @@
     <button class="bottom-tab" data-section="vip">⭐<span>VIP</span></button>
   </nav>
 
-  <dialog id="modal" class="modal">
+  <div id="modal" class="modal hidden" aria-hidden="true">
     <div class="modal-card">
       <button class="close" id="closeModal">×</button>
       <h3 id="modalTitle"></h3>
@@ -105,8 +105,8 @@
         <div><strong>Πηγή</strong><p id="modalSource"></p></div>
       </div>
     </div>
-  </dialog>
+  </div>
 
-  <script src="app.js"></script>
+  <script src="app-v31.js"></script>
 </body>
 </html>
