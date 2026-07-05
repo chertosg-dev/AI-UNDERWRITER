@@ -20,7 +20,7 @@ button{cursor:pointer}.modal:not(.hidden){display:flex!important}@media (max-wid
       <p class="eyebrow">Εθνική Ασφαλιστική</p>
       <h1>AI Underwriter</h1>
     </div>
-    <span class="version">v4.2</span>
+    <span class="version">v4.3</span>
   </header>
 
   <main class="app-shell">
@@ -74,11 +74,37 @@ button{cursor:pointer}.modal:not(.hidden){display:flex!important}@media (max-wid
     <section id="section-business" class="section">
       <div class="hero-card"><h2>Επιχείρηση</h2><p>Κανόνες ανάληψης και καλύψεις για Εθνική & Επιχείρηση.</p></div>
       <div class="action-grid">
+        <button class="action-card" data-view="business-analysis">Νέα Ανάλυση <span>Οδηγός ανάληψης επιχείρησης</span></button>
         <button class="action-card" data-view="business-rules">Κανόνες Ανάληψης <span>Άδεια, πυροπροστασία, κλοπή</span></button>
         <button class="action-card" data-view="business-coverages">Καλύψεις <span>Απλό / Πλήρες / Plus</span></button>
       </div>
-      <div id="business-rules" class="view active-view">
-        <article class="panel"><h3>Έλεγχοι πριν την προσφορά</h3><div class="rule-list" id="businessRules"></div></article>
+      <div id="business-analysis" class="view active-view">
+        <article class="panel">
+          <h3>1. Στοιχεία επιχείρησης</h3>
+          <label>Είδος επιχείρησης / δραστηριότητα<input id="bActivity" placeholder="π.χ. γραφείο, κατάστημα, αποθήκη" /></label>
+          <label>Ασφαλιζόμενα αντικείμενα<select id="bInsured"><option>Οικοδομή</option><option>Περιεχόμενο</option><option>Οικοδομή και Περιεχόμενο</option></select></label>
+          <label>Κεφάλαιο περιεχομένου (€)<input id="bContentValue" inputmode="numeric" placeholder="π.χ. 150000" /></label>
+          <label>Συνολικό ασφαλιζόμενο κεφάλαιο (€)<input id="bTotalValue" inputmode="numeric" placeholder="π.χ. 500000" /></label>
+        </article>
+        <article class="panel">
+          <h3>2. Έλεγχοι ανάληψης</h3>
+          <div class="check-list">
+            <label><input type="checkbox" id="bLicense"> Υπάρχει άδεια λειτουργίας όπου απαιτείται</label>
+            <label><input type="checkbox" id="bFireProtection"> Υπάρχουν και λειτουργούν τα προβλεπόμενα μέτρα πυροπροστασίας</label>
+            <label><input type="checkbox" id="bFireCert"> Υπάρχει πιστοποιητικό Π.Υ. σε ισχύ όπου απαιτείται</label>
+            <label><input type="checkbox" id="bTheft"> Ζητείται κάλυψη κλοπής περιεχομένου</label>
+            <label><input type="checkbox" id="bSecurity"> Υπάρχουν ικανοποιητικά μέτρα προστασίας για κλοπή</label>
+            <label><input type="checkbox" id="bEarthquake"> Ζητείται σεισμός</label>
+            <label><input type="checkbox" id="bBefore1960"> Κτίριο πριν το 1960</label>
+            <label><input type="checkbox" id="bThirdParty"> Περιεχόμενο τρίτων</label>
+            <label><input type="checkbox" id="bExcluded"> Χρήση που πιθανόν εξαιρείται / υψηλού κινδύνου</label>
+          </div>
+          <button class="primary" id="runBusiness">Ανάλυση επιχείρησης</button>
+        </article>
+        <article id="businessResult" class="result hidden"></article>
+      </div>
+      <div id="business-rules" class="view">
+        <article class="panel"><h3>Κανόνες ανάληψης επιχείρησης</h3><div class="rule-list" id="businessRules"></div></article>
       </div>
       <div id="business-coverages" class="view">
         <article class="panel sticky-panel"><h3>Καλύψεις επιχείρησης</h3><select id="businessProduct" class="big-select"><option value="simple">Εθνική & Επιχείρηση</option><option value="plus">Εθνική & Επιχείρηση PLUS</option></select><select id="businessPackage" class="big-select"><option>Απλό</option><option>Πλήρες</option><option>Προαιρετικές</option></select></article>
@@ -231,7 +257,18 @@ const vip = [
  {n:'Ατομική και Οικογενειακή Αστική Ευθύνη',p:'Προαιρετικές',l:'Έως €200.000 ανά γεγονός και ετησίως.',d:'Σε υλικές ζημιές: €150.',s:'σελ. 10'}
 ];
 const businessRules = [
- ['Άδεια λειτουργίας','Απαιτείται όπου προβλέπεται από τη νομοθεσία.'],['Πυροπροστασία','Απαιτείται ύπαρξη, συντήρηση και λειτουργία των προβλεπόμενων μέτρων πυροπροστασίας.'],['Κλοπή περιεχομένου','Απαιτούνται ικανοποιητικά μέτρα προστασίας, ανάλογα με χρήση, κεφάλαιο και ιστορικό ζημιών.'],['Σεισμός','Απαιτείται έντυπο σεισμού. Για κτίρια προ του 1960 απαιτείται δελτίο τρωτότητας από μηχανικό.'],['Εξαιρέσεις','Υπάρχουν χρήσεις που εξαιρούνται ή απαιτούν έγκριση Κλάδου σύμφωνα με την κατάταξη κινδύνων.']
+ ['Πεδίο εφαρμογής','Τα προϊόντα Εθνική & Επιχείρηση απευθύνονται σε γραφεία, επιχειρήσεις παροχής υπηρεσιών, εμπορικά καταστήματα, αποθήκες και μικρές μεταποιητικές / παραγωγικές μονάδες.'],
+ ['Όρια κεφαλαίων','Οικοδομή χωρίς περιορισμό ανώτατου κεφαλαίου σε αξία καινούργιου. Περιεχόμενο έως €900.000 σε τρέχουσα πραγματική αξία. Συνολικό κεφάλαιο οικοδομής και περιεχομένου έως €4.400.000.'],
+ ['Άδεια λειτουργίας','Απαιτείται άδεια λειτουργίας όπου προβλέπεται από τη νομοθεσία. Αν δεν υπάρχει ενώ απαιτείται, η υπόθεση θέλει έλεγχο πριν την προσφορά.'],
+ ['Πυροπροστασία','Πρέπει να υπάρχουν, να συντηρούνται και να λειτουργούν τα προβλεπόμενα μέτρα πυροπροστασίας. Το πιστοποιητικό Π.Υ. πρέπει να είναι σε ισχύ όπου απαιτείται και να αποστέλλεται όταν ζητηθεί.'],
+ ['Κατασκευή οικοδομής','Η οικοδομή πρέπει κατά βάση να είναι εξαιρετικής κατασκευής ή τάξης Α. Άλλες κατασκευές εξετάζονται μόνο μετά από έγκριση αρμόδιας Μονάδας.'],
+ ['Περιεχόμενο τρίτων','Περιεχόμενο τρίτων γενικά εξαιρείται, εκτός μεμονωμένων περιπτώσεων με έγκριση Κλάδου. Προσοχή σε συνεργεία, service, ραφεία, καθαριστήρια κ.λπ.'],
+ ['Κλοπή περιεχομένου','Για κλοπή απαιτούνται ικανοποιητικά μέτρα προστασίας, δηλωμένα στην πρόταση ασφάλισης. Η επάρκεια εξετάζεται βάσει χρήσης, κεφαλαίου, επικινδυνότητας και ιστορικού ζημιών.'],
+ ['Κλοπή — χρήσεις χωρίς κάλυψη','Υπάρχουν επαγγέλματα στα οποία δεν παρέχεται κάλυψη κλοπής, όπως ενδεικτικά οπτικά, δερμάτινα, γουναρικά και internet cafe, σύμφωνα με την κατάταξη κινδύνων.'],
+ ['Σεισμός','Απαιτείται υπογεγραμμένο έντυπο σεισμού. Για κτίρια προ του 1960 απαιτείται και δελτίο τρωτότητας από μηχανικό, καθώς και φωτογραφικό υλικό αν ζητηθεί.'],
+ ['Τρομοκρατικές ενέργειες','Σε συγκεκριμένες περιοχές, όπως κέντρο Αθήνας, Εξάρχεια και γύρω από Πολυτεχνείο, απαιτούνται συμπαγή μεταλλικά ρολά ασφαλείας σε όλες τις εξωτερικές πλευρές.'],
+ ['Ρητές εξαιρέσεις / έγκριση Κλάδου','Χρήσεις όπως κοσμηματοπωλεία, κέντρα διασκέδασης, χαρτοπαικτικές λέσχες, logistics και αποθήκες πλαστικών ειδών/διογκωμένης πολυουρεθάνης εξαιρούνται ή απαιτούν ειδικό έλεγχο.'],
+ ['Περίπτερα','Τα περίπτερα εξαιρούνται από τα πακέτα. Παρέχεται ειδική κάλυψη περιεχομένου, κυρίως καπνικών, μόνο με προϋποθέσεις και έγκριση Κλάδου.']
 ];
 const vipRules = [['Όριο κάλυψης','Για οικοδομή ή/και περιεχόμενο από €300.000 έως €15.000.000.'],['Βάση κάλυψης','Κατά Παντός Κινδύνου, εκτός αν η αιτία εξαιρείται από τους όρους.'],['Προαιρετικές καλύψεις','Σεισμός και Ατομική/Οικογενειακή Αστική Ευθύνη.'],['Ειδικά αντικείμενα','Δεν μπορούν να υπερβαίνουν το 50% του συνολικού ασφαλιζόμενου κεφαλαίου περιεχομένου.'],['Σεισμός','Απαιτείται έντυπο σεισμού και, για κτίρια πριν το 1960, δελτίο τρωτότητας από μηχανικό.']];
 function $(q){return document.querySelector(q)}
@@ -255,6 +292,26 @@ function openModal(c){
 }
 function closeModal(){const m=$('#modal'); m.classList.add('hidden'); m.setAttribute('aria-hidden','true')}
 function analyzeHome(){const issues=[];let status='ok', title='🟢 Αναλαμβάνεται';const year=Number($('#hYear').value||0);const usage=$('#hUsage').value;if($('#hBad').checked){status='bad';title='🔴 Δεν παρέχεται κάλυψη';issues.push('Κατοικία εγκαταλελειμμένη ή σε κακή κατάσταση συντήρησης.')}if($('#hForest').checked){status='bad';title='🔴 Δεν παρέχεται κάλυψη';issues.push('Απομονωμένη περιοχή εκτός οικιστικού ιστού ή εντός δασικής έκτασης.')}if($('#hWood').checked){if(status!=='bad'){status='warn';title='🟠 Απαιτείται έγκριση Κλάδου'}issues.push('Ξύλινη κατοικία: απαιτούνται στοιχεία κατασκευής, είδος ξυλείας, τοποθεσία και φωτογραφικό υλικό.')}if($('#hStone').checked){if(status!=='bad'){status='warn';title='🟠 Απαιτείται έγκριση Κλάδου'}issues.push('Πέτρινη/διατηρητέα οικοδομή: απαιτείται έγκριση Κλάδου και καλή συντήρηση.')}if($('#hCave').checked&&$('#hEarthquake').checked){if(status!=='bad'){status='warn';title='🟠 Προσοχή στον σεισμό'}issues.push('Σε υπόσκαφα κτίρια δεν παρέχεται κάλυψη σεισμού.')}if(usage.includes('Airbnb'))issues.push('Airbnb χωρίς άδεια ΕΟΤ: περιεχόμενο μέχρι Advanced, εκτός διαφορετικής συμφωνίας με τον Κλάδο.');if(usage.includes('Εξοχική')&&$('#hTheft').checked){if(status!=='bad'){status='warn';title='🟠 Αναλαμβάνεται με προϋποθέσεις'}issues.push('Κλοπή σε εξοχική: απαιτείται μόνιμη κατοικία στην Εταιρία, μη απομονωμένη περιοχή και καθαρό ιστορικό ζημιών.')}if($('#hEarthquake').checked)issues.push(year&&year<1960?'Σεισμός πριν το 1960: έντυπο σεισμού και δελτίο τρωτότητας από μηχανικό.':'Σεισμός: απαιτείται υπογεγραμμένο έντυπο σεισμού.');if(year&&year<1950)issues.push('Κτίριο προ του 1950: ασφάλιση αποκλειστικά σε τρέχουσα πραγματική αξία.');if(!issues.length)issues.push('Δεν εντοπίστηκε ειδική επιφύλαξη από τα δηλωμένα στοιχεία.');$('#homeResult').className='result '+status;$('#homeResult').innerHTML=`<h3>${title}</h3><ul>${issues.map(i=>`<li>${i}</li>`).join('')}</ul><p class="hint">Πηγή: ${source}, σελ. 7-9.</p>`}
+
+function analyzeBusiness(){
+  const issues=[]; let status='ok', title='🟢 Αναλαμβάνεται';
+  const activity=($('#bActivity')?.value||'').trim();
+  const contentValue=Number(($('#bContentValue')?.value||'').replace(/[^0-9]/g,''));
+  const totalValue=Number(($('#bTotalValue')?.value||'').replace(/[^0-9]/g,''));
+  if(!$('#bLicense').checked){status='warn';title='🟠 Εκκρεμεί βασική προϋπόθεση';issues.push('Να επιβεβαιωθεί άδεια λειτουργίας όπου απαιτείται από τη νομοθεσία.')}
+  if(!$('#bFireProtection').checked){status='warn';title='🟠 Εκκρεμεί βασική προϋπόθεση';issues.push('Να επιβεβαιωθεί ύπαρξη, συντήρηση και λειτουργία των προβλεπόμενων μέτρων πυροπροστασίας.')}
+  if(!$('#bFireCert').checked){issues.push('Αν απαιτείται πιστοποιητικό Π.Υ., πρέπει να είναι σε ισχύ και να αποστέλλεται όταν ζητηθεί από τον Κλάδο.')}
+  if(contentValue && contentValue>900000){status='bad';title='🔴 Εκτός ορίων προϊόντος';issues.push('Το περιεχόμενο υπερβαίνει το ανώτατο ασφαλιζόμενο κεφάλαιο €900.000.')}
+  if(totalValue && totalValue>4400000){status='bad';title='🔴 Εκτός ορίων προϊόντος';issues.push('Το συνολικό κεφάλαιο οικοδομής και περιεχομένου υπερβαίνει τα €4.400.000.')}
+  if($('#bTheft').checked && !$('#bSecurity').checked){if(status!=='bad'){status='warn';title='🟠 Απαιτείται έλεγχος Κλάδου'}issues.push('Για κλοπή περιεχομένου απαιτούνται ικανοποιητικά μέτρα προστασίας δηλωμένα στην πρόταση ασφάλισης.')}
+  if($('#bEarthquake').checked){issues.push($('#bBefore1960').checked?'Σεισμός για κτίριο πριν το 1960: έντυπο σεισμού και δελτίο τρωτότητας από μηχανικό.':'Σεισμός: απαιτείται υπογεγραμμένο έντυπο σεισμού.')}
+  if($('#bThirdParty').checked){if(status!=='bad'){status='warn';title='🟠 Απαιτείται έγκριση Κλάδου'}issues.push('Περιεχόμενο τρίτων γενικά εξαιρείται, εκτός ειδικών περιπτώσεων με έγκριση Κλάδου.')}
+  if($('#bExcluded').checked){status='warn';title='🟠 Απαιτείται ειδικός έλεγχος / πιθανή εξαίρεση';issues.push('Η χρήση πρέπει να ελεγχθεί στην κατάταξη κινδύνων/επαγγελματιών για πιθανή εξαίρεση ή ειδική έγκριση.')}
+  if(activity) issues.unshift('Δραστηριότητα προς έλεγχο: '+activity+'.');
+  if(!issues.length) issues.push('Δεν εντοπίστηκε ειδική επιφύλαξη από τα δηλωμένα στοιχεία, υπό την προϋπόθεση ότι η χρήση περιλαμβάνεται στην κατάταξη κινδύνων.');
+  const r=$('#businessResult'); r.className='result '+status; r.innerHTML=`<h3>${title}</h3><ul>${issues.map(i=>`<li>${i}</li>`).join('')}</ul><p class="hint">Πηγή: ${source}, σελ. 13, 16-17.</p>`;
+}
+
 document.addEventListener('DOMContentLoaded',()=>{
   closeModal();
   renderHome();renderBusiness();renderVip();renderRules();
@@ -272,6 +329,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(btn){openModal(coverageStore[Number(btn.dataset.covIndex)])}
   });
   $('#runHome').addEventListener('click',analyzeHome);
+  $('#runBusiness').addEventListener('click',analyzeBusiness);
   if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{})}
 });
 
