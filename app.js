@@ -107,6 +107,7 @@ function switchSection(section){
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active-section'));
   document.getElementById(`section-${section}`).classList.add('active-section');
   document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.section === section));
+  document.querySelectorAll('.bottom-tab[data-section]').forEach(b => b.classList.toggle('active', b.dataset.section === section));
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
@@ -299,3 +300,47 @@ renderHomeCoverages();
 renderBusinessGroup('businessCoverages', businessSimple, ['Απλό','Πλήρες'], 'business');
 renderBusinessGroup('businessPlusCoverages', businessPlus, ['Απλό','Σύνθετο','Πλήρες'], 'businessPlus');
 renderVip();
+
+
+// Mobile search: filters visible coverage buttons and gives quick suggestions.
+const quickTerms = ['Airbnb', 'Σεισμός', 'Κλοπή', 'Πλημμύρα', 'Διαρροή', 'Πυροπροστασία', 'VIP', 'Αστική Ευθύνη'];
+function normalizeText(v){ return (v || '').toString().toLocaleLowerCase('el-GR'); }
+function handleSearch(value){
+  const q = normalizeText(value).trim();
+  const sug = document.getElementById('searchSuggestions');
+  if(!sug) return;
+  const terms = q ? quickTerms.filter(t => normalizeText(t).includes(q) || q.includes(normalizeText(t))).slice(0,5) : quickTerms.slice(0,5);
+  sug.innerHTML = terms.map(t => `<button type="button" onclick="applySuggestion('${t.replace(/'/g, "\\'")}')">${t}</button>`).join('');
+  filterCoverageButtons(q);
+}
+function applySuggestion(term){
+  const input = document.getElementById('globalSearch');
+  input.value = term;
+  handleSearch(term);
+  const first = [...document.querySelectorAll('.active-section .coverage-row')].find(r => r.style.display !== 'none');
+  if(first) first.scrollIntoView({behavior:'smooth', block:'center'});
+}
+function filterCoverageButtons(q){
+  document.querySelectorAll('.coverage-row').forEach(row => {
+    const btn = row.querySelector('.coverage-btn');
+    if(!btn) return;
+    const original = btn.dataset.original || btn.querySelector('span').textContent;
+    btn.dataset.original = original;
+    const text = normalizeText(btn.textContent);
+    const show = !q || text.includes(q);
+    row.style.display = show ? '' : 'none';
+    const span = btn.querySelector('span');
+    span.innerHTML = original;
+    if(q && show){
+      const idx = normalizeText(original).indexOf(q);
+      if(idx >= 0){
+        span.innerHTML = original.slice(0, idx) + '<mark>' + original.slice(idx, idx+q.length) + '</mark>' + original.slice(idx+q.length);
+      }
+    }
+  });
+}
+function showSourceHint(){
+  const txt = document.getElementById('modalSource').textContent || 'Πηγή: εγχειρίδιο Πυρός';
+  alert(txt + '\n\nΣτην επόμενη έκδοση θα ανοίγει απευθείας η αντίστοιχη σελίδα του PDF μέσα στην εφαρμογή.');
+}
+document.addEventListener('DOMContentLoaded', () => handleSearch(''));

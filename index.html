@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AI Underwriter</title>
+  <title>AI Underwriter | Εθνική Ασφαλιστική</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -11,11 +11,28 @@
     <header>
       <div>
         <h1>🔥 AI Underwriter</h1>
-        <p>Οδηγός ανάληψης κινδύνου — Πυρός</p>
+        <p>Mobile οδηγός ανάληψης κινδύνου — Πυρός</p>
       </div>
-      <span class="badge">MVP v1.3</span>
+      <span class="badge">Εθνική Ασφαλιστική</span>
     </header>
 
+
+    <section class="mobile-hero" aria-label="Γρήγορη πρόσβαση">
+      <div class="hero-card">
+        <span class="hero-kicker">Ρώτα τον Underwriter</span>
+        <label class="search-label" for="globalSearch">Γρήγορη αναζήτηση σε καλύψεις και κανόνες</label>
+        <div class="search-wrap">
+          <span>🔍</span>
+          <input id="globalSearch" type="search" placeholder="π.χ. Airbnb, σεισμός, κλοπή, πλημμύρα" oninput="handleSearch(this.value)" />
+        </div>
+        <div id="searchSuggestions" class="suggestions"></div>
+      </div>
+      <div class="quick-cards">
+        <button class="quick-card" onclick="switchSection('home')"><strong>🏠 Κατοικία</strong><small>Νέα ανάληψη, καλύψεις, όρια</small></button>
+        <button class="quick-card" onclick="switchSection('business')"><strong>🏢 Επιχείρηση</strong><small>Άδεια, πυροπροστασία, κλοπή</small></button>
+        <button class="quick-card" onclick="switchSection('vip')"><strong>⭐ VIP</strong><small>Κατά Παντός Κινδύνου</small></button>
+      </div>
+    </section>
     <nav class="top-menu" aria-label="Κύριο μενού">
       <button class="tab active" data-section="home" onclick="switchSection('home')">🏠 Κατοικία</button>
       <button class="tab" data-section="business" onclick="switchSection('business')">🏢 Επιχείρηση</button>
@@ -26,7 +43,7 @@
       <section id="section-home" class="section active-section">
         <div class="grid">
           <section class="card">
-            <h2>1. Στοιχεία κατοικίας</h2>
+            <div class="step-title"><span>1</span><h2>Στοιχεία κατοικίας</h2></div>
             <label>Χρήση κατοικίας
               <select id="usage">
                 <option>Κύρια κατοικία</option>
@@ -56,7 +73,7 @@
           </section>
 
           <section class="card">
-            <h2>2. Ερωτήσεις ανάληψης</h2>
+            <div class="step-title"><span>2</span><h2>Ερωτήσεις ανάληψης</h2></div>
             <div class="checks">
               <label><input type="checkbox" id="wooden"> Ξύλινη κατοικία</label>
               <label><input type="checkbox" id="stone"> Πέτρινη κατοικία</label>
@@ -70,7 +87,7 @@
           </section>
 
           <section class="card wide">
-            <h2>3. Καλύψεις κατοικίας ανά πακέτο</h2>
+            <div class="step-title"><span>3</span><h2>Καλύψεις κατοικίας ανά πακέτο</h2></div>
             <p class="muted">Πάτησε πάνω στην κάλυψη για όριο κάλυψης και απαλλαγές.</p>
             <div id="homeCoverages" class="package-grid"></div>
           </section>
@@ -78,7 +95,7 @@
           <section class="card wide result-card">
             <div class="actions">
               <h2>Αποτέλεσμα AI Underwriter</h2>
-              <button onclick="runUnderwriting()">Ανάλυση κινδύνου</button>
+              <button class="primary-action" onclick="runUnderwriting()">📌 Τι να προσέξω / Ανάλυση</button>
             </div>
             <div id="result" class="result muted">Συμπλήρωσε τα στοιχεία και πάτησε «Ανάλυση κινδύνου».</div>
           </section>
@@ -169,6 +186,13 @@
         </section>
       </section>
     </main>
+
+    <nav class="bottom-nav" aria-label="Μενού κινητού">
+      <button class="bottom-tab active" data-section="home" onclick="switchSection('home')">🏠<span>Κατοικία</span></button>
+      <button class="bottom-tab" data-section="business" onclick="switchSection('business')">🏢<span>Επιχείρηση</span></button>
+      <button class="bottom-tab" data-section="vip" onclick="switchSection('vip')">⭐<span>VIP</span></button>
+      <button class="bottom-tab" onclick="document.getElementById('globalSearch').focus()">🔍<span>Αναζήτηση</span></button>
+    </nav>
   </div>
 
   <div id="coverageModal" class="modal hidden" aria-hidden="true">
@@ -183,6 +207,7 @@
         </tbody>
       </table>
       <p id="modalSource" class="muted"></p>
+      <button class="source-button" onclick="showSourceHint()">📖 Προβολή πηγής</button>
     </div>
   </div>
   <script src="app.js"></script>
