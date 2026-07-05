@@ -17,19 +17,15 @@
     </header>
 
 
-    <section class="mobile-hero" aria-label="Γρήγορη πρόσβαση">
+    <section class="mobile-hero compact-hero" aria-label="Γρήγορη πρόσβαση">
       <div class="hero-card">
-        <span class="hero-kicker">Ρώτα τον Underwriter</span>
-        <label class="search-label" for="globalSearch">Γρήγορη αναζήτηση σε καλύψεις και κανόνες</label>
-        <div class="search-wrap">
-          <span>🔍</span>
-          <input id="globalSearch" type="search" placeholder="π.χ. Airbnb, σεισμός, κλοπή, πλημμύρα" oninput="handleSearch(this.value)" />
-        </div>
-        <div id="searchSuggestions" class="suggestions"></div>
+        <span class="hero-kicker">Εθνική Ασφαλιστική</span>
+        <h2>Οδηγός ανάληψης κινδύνου Πυρός</h2>
+        <p>Επίλεξε ενότητα και δες καθαρά τους κανόνες, τις καλύψεις, τα όρια και τις απαλλαγές.</p>
       </div>
       <div class="quick-cards">
-        <button class="quick-card" onclick="switchSection('home')"><strong>🏠 Κατοικία</strong><small>Νέα ανάληψη, καλύψεις, όρια</small></button>
-        <button class="quick-card" onclick="switchSection('business')"><strong>🏢 Επιχείρηση</strong><small>Άδεια, πυροπροστασία, κλοπή</small></button>
+        <button class="quick-card" onclick="switchSection('home')"><strong>🏠 Κατοικία</strong><small>Κανόνες & πακέτα</small></button>
+        <button class="quick-card" onclick="switchSection('business')"><strong>🏢 Επιχείρηση</strong><small>Έλεγχοι ανάληψης</small></button>
         <button class="quick-card" onclick="switchSection('vip')"><strong>⭐ VIP</strong><small>Κατά Παντός Κινδύνου</small></button>
       </div>
     </section>
@@ -191,7 +187,6 @@
       <button class="bottom-tab active" data-section="home" onclick="switchSection('home')">🏠<span>Κατοικία</span></button>
       <button class="bottom-tab" data-section="business" onclick="switchSection('business')">🏢<span>Επιχείρηση</span></button>
       <button class="bottom-tab" data-section="vip" onclick="switchSection('vip')">⭐<span>VIP</span></button>
-      <button class="bottom-tab" onclick="document.getElementById('globalSearch').focus()">🔍<span>Αναζήτηση</span></button>
     </nav>
   </div>
 
