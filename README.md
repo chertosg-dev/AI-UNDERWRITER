@@ -1,3 +1,17 @@
-# AI Underwriter v3.1 Mobile Fixed
+# AI Underwriter v4 Mobile
 
-Fixed modal, click handling and mobile layout. Upload contents to GitHub repository root.
+Έκδοση mobile-first για GitHub Pages.
+
+## Τι άλλαξε
+- Καθαρότερη εμφάνιση σε κινητό.
+- Καλύψεις ανά ενότητα και ανά πακέτο.
+- Διόρθωση Εθνική & Επιχείρηση PLUS:
+  - Απλό: εμφανίζει μόνο τις καλύψεις του Απλού.
+  - Πλήρες: εμφανίζει όλες τις καλύψεις Απλού + Σύνθετου + Πλήρους.
+  - Προαιρετικές: εμφανίζει μόνο τις προαιρετικές.
+
+## Upload στο GitHub
+Ανέβασε τα περιεχόμενα του φακέλου, όχι το ZIP.
+
+Μετά άνοιξε:
+https://chertosg-dev.github.io/AI-UNDERWRITER/?v=40
