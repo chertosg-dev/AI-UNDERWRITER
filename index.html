@@ -4,12 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AI Underwriter</title>
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#101e32" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="AI Underwriter" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -19,7 +13,7 @@
         <h1>🔥 AI Underwriter</h1>
         <p>Οδηγός ανάληψης κινδύνου — Πυρός</p>
       </div>
-      <span class="badge">PWA v2.0</span>
+      <span class="badge">MVP v1.3</span>
     </header>
 
     <nav class="top-menu" aria-label="Κύριο μενού">
@@ -192,12 +186,5 @@
     </div>
   </div>
   <script src="app.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(() => {});
-      });
-    }
-  </script>
 </body>
 </html>
