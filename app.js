@@ -21,6 +21,10 @@ initProducts();initBusinesses();render();
 
 
 // ===== v11 SEPARATE FIRE / AUTO SECTIONS =====
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","\'":"&#39;"}[ch]));
+}
+
 let AUTO = null;
 let activeBranch = null;
 let autoReady = false;
@@ -354,7 +358,7 @@ function openFireBranch() {
   if (option) {
     selectedProduct = option.value;
     select.value = option.value;
-    const packages = packageOrder(selectedProduct);
+    const packages = order(selectedProduct);
     selectedPackage = packages[packages.length - 1];
   }
 
@@ -446,3 +450,10 @@ el("vehicleUse")?.addEventListener("change", () => {
 
 showLanding();
 loadAuto();
+
+
+// v12: bind buttons to the active branch functions, not to the original fire handlers.
+el("analyzeBtn").onclick = () => analyze();
+el("copyBtn").onclick = () => copyResult();
+el("backHomeBtn")?.addEventListener("click", showLanding);
+el("floatingHomeBtn")?.addEventListener("click", showLanding);

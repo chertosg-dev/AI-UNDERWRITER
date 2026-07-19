@@ -215,3 +215,8 @@
     min-width: 0;
   }
 }
+
+
+/* v12 always-visible home button */
+.floating-home{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:1200;border:0;border-radius:999px;background:#111827;color:#fff;padding:13px 17px;font-weight:900;box-shadow:0 12px 30px rgba(15,23,42,.28);cursor:pointer}
+@media(min-width:701px){.floating-home{right:24px;bottom:24px}}
