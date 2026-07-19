@@ -2,8 +2,232 @@
 <html lang="el">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI Underwriter Εθνικής v12</title>
-<link rel="stylesheet" href="styles.css">
+<title>AI Underwriter Εθνικής v13</title>
+<style>
+:root{--bg:#f5f7fb;--card:rgba(255,255,255,.92);--text:#111827;--muted:#6b7280;--blue:#0a84ff;--border:rgba(17,24,39,.12);--shadow:0 22px 70px rgba(15,23,42,.12);--green:#0f8a4b}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:radial-gradient(circle at top left,rgba(10,132,255,.16),transparent 34%),radial-gradient(circle at top right,rgba(52,199,89,.12),transparent 28%),var(--bg);color:var(--text)}
+.wrap{width:min(1240px,calc(100% - 28px));margin:auto;padding:28px 0 50px}.hero{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:22px}.brand{font-weight:900;color:var(--blue);display:flex;align-items:center;gap:10px}.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#0a84ff,#64d2ff)}h1{margin:12px 0 6px;font-size:clamp(32px,5vw,56px);line-height:.95;letter-spacing:-.06em}.subtitle{margin:0;color:var(--muted);font-size:17px;max-width:850px}.pill{border:1px solid var(--border);background:var(--card);border-radius:999px;padding:10px 14px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:410px 1fr;gap:18px;align-items:start}.card{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:28px;box-shadow:var(--shadow);padding:20px}label{display:block;margin:14px 0 7px;font-size:13px;font-weight:900;color:var(--muted)}select,input,textarea{width:100%;border:1px solid var(--border);border-radius:16px;background:white;padding:13px 14px;font-size:15px;outline:none}select[size]{height:225px;padding:8px}textarea{min-height:110px;resize:vertical}
+.segmented{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;background:rgba(17,24,39,.06);padding:6px;border-radius:18px}button{font-family:inherit}.segmented button,.btn{border:0;border-radius:14px;padding:12px 10px;font-size:14px;font-weight:900;cursor:pointer}.segmented button{background:transparent;color:var(--muted)}.segmented button.active{background:white;color:var(--blue);box-shadow:0 8px 18px rgba(15,23,42,.10)}.btn{width:100%;margin-top:14px;color:white;background:linear-gradient(135deg,var(--blue),#4aa3ff);box-shadow:0 14px 30px rgba(10,132,255,.24)}.btn.secondary{background:white;color:var(--text);border:1px solid var(--border);box-shadow:none}
+.head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:16px}.status{background:rgba(15,138,75,.1);color:var(--green);font-weight:900;border-radius:999px;padding:9px 12px;font-size:13px}.muted,.small,.help{color:var(--muted)}.small,.help{font-size:12px;margin-top:6px}.cards{display:grid;gap:12px}.mini{background:rgba(255,255,255,.74);border:1px solid var(--border);border-radius:20px;padding:16px}.mini h3{margin:0 0 10px;font-size:16px}.mini h4{margin:14px 0 6px}
+.coverage-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}.coverage{text-align:left;border:1px solid var(--border);background:white;border-radius:16px;padding:13px;font-weight:850;cursor:pointer;transition:.14s}.coverage:hover{transform:translateY(-1px);border-color:rgba(10,132,255,.5);box-shadow:0 10px 26px rgba(10,132,255,.12)}.tag{display:inline-block;margin-top:7px;color:var(--blue);font-size:11px;font-weight:900}.hidden{display:none!important}
+.modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.44);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:18px;z-index:100;opacity:0;pointer-events:none;transition:.18s}.modal-backdrop.show{opacity:1;pointer-events:auto}.modal{width:min(720px,100%);max-height:90vh;overflow:auto;background:white;border-radius:28px;box-shadow:0 30px 90px rgba(0,0,0,.28);border:1px solid var(--border)}.modal-head{position:sticky;top:0;background:white;display:flex;justify-content:space-between;gap:12px;padding:18px 20px;border-bottom:1px solid var(--border)}.modal-head h3{margin:0;font-size:20px}.close{border:0;background:rgba(17,24,39,.06);border-radius:999px;width:36px;height:36px;font-size:22px;cursor:pointer}.modal-body{display:grid;gap:12px;padding:18px 20px}.row{border:1px solid var(--border);background:rgba(245,247,251,.9);border-radius:18px;padding:14px;line-height:1.45}.row strong{display:block;color:var(--blue);margin-bottom:5px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:rgba(17,24,39,.92);color:white;padding:12px 16px;border-radius:999px;opacity:0;z-index:110;transition:.2s}.toast.show{opacity:1}
+@media(max-width:900px){.hero{flex-direction:column;align-items:flex-start}.grid{grid-template-columns:1fr}.coverage-grid{grid-template-columns:1fr}.segmented{grid-template-columns:repeat(2,1fr)}}
+
+.landing-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+}
+
+.landing-card {
+  width: min(920px, 100%);
+  background: var(--card);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--border);
+  border-radius: 32px;
+  box-shadow: var(--shadow);
+  padding: clamp(24px, 5vw, 48px);
+  text-align: center;
+}
+
+.landing-card .brand {
+  justify-content: center;
+}
+
+.branch-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 30px;
+}
+
+.branch-card {
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  padding: 30px 24px;
+  background: white;
+  cursor: pointer;
+  text-align: left;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.branch-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 48px rgba(15,23,42,.14);
+  border-color: rgba(10,132,255,.45);
+}
+
+.branch-icon {
+  display: block;
+  font-size: 40px;
+  margin-bottom: 18px;
+}
+
+.branch-title {
+  display: block;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -.03em;
+  margin-bottom: 8px;
+}
+
+.branch-description {
+  display: block;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.back-home {
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--text);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .branch-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+
+.branch-card.loading {
+  opacity: .55;
+  cursor: wait;
+}
+
+.branch-card:disabled {
+  pointer-events: none;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.back-home {
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--text);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .wrap {
+    width: min(100% - 18px, 1240px);
+    padding-top: 14px;
+  }
+
+  .landing-screen {
+    padding: 14px;
+    min-height: 100dvh;
+  }
+
+  .landing-card {
+    padding: 22px 16px;
+    border-radius: 24px;
+  }
+
+  .branch-card {
+    min-height: 150px;
+    padding: 22px 18px;
+  }
+
+  .hero-actions {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .segmented {
+    grid-template-columns: 1fr;
+  }
+
+  select[size] {
+    height: 180px;
+  }
+
+  .modal {
+    max-height: 92dvh;
+  }
+}
+
+
+/* v11 */
+.back-home {
+  position: sticky;
+  top: 10px;
+  z-index: 20;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, .12);
+}
+
+.analysis-status {
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+
+.analysis-status.ok {
+  background: rgba(52, 199, 89, .12);
+  border: 1px solid rgba(52, 199, 89, .28);
+}
+
+.analysis-status.warning {
+  background: rgba(255, 149, 0, .12);
+  border: 1px solid rgba(255, 149, 0, .30);
+}
+
+#autoResultPanel {
+  scroll-margin-top: 18px;
+}
+
+@media (max-width: 700px) {
+  .back-home {
+    position: fixed;
+    left: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    top: auto;
+    z-index: 999;
+    padding: 12px 16px;
+  }
+
+  #mainApplication {
+    padding-bottom: 78px;
+  }
+
+  #fireResultPanel,
+  #autoResultPanel {
+    min-width: 0;
+  }
+}
+
+
+/* v12 always-visible home button */
+.floating-home{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:1200;border:0;border-radius:999px;background:#111827;color:#fff;padding:13px 17px;font-weight:900;box-shadow:0 12px 30px rgba(15,23,42,.28);cursor:pointer}
+@media(min-width:701px){.floating-home{right:24px;bottom:24px}}
+
+</style>
 </head>
 <body>
 
@@ -108,9 +332,481 @@
     </div>
   </div>
 </section>
-</section>
 </main>
 <div class="modal-backdrop" id="modal"><div class="modal"><div class="modal-head"><h3 id="mTitle"></h3><button class="close" id="mClose">×</button></div><div class="modal-body"><div class="row"><strong>Όριο κάλυψης</strong><span id="mLimit"></span></div><div class="row"><strong>Απαλλαγή</strong><span id="mDed"></span></div><div class="row"><strong>Ερμηνεία</strong><span id="mMean"></span></div><div class="row"><strong>Εξαιρέσεις / Προσοχή</strong><span id="mExc"></span></div><div class="row"><strong>Underwriting</strong><span id="mUw"></span></div><div class="row"><strong>Πηγή</strong><span id="mSource"></span></div></div></div></div>
 <div class="toast" id="toast">Αντιγράφηκε</div>
-<script src="app.js"></script></div>
+<script>
+const DATA={"business": {"label": "Εθνική & Επιχείρηση", "kind": "business", "packages": {"simple": {"label": "Απλό Πακέτο", "coverages": [{"name": "Πυρκαγιά - Πτώση κεραυνού", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Βασική κάλυψη FLEXA.", "exclusions": "", "uw": "", "source": "PDF σελ. 13"}, {"name": "Έκρηξη", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Ζημιές από έκρηξη.", "exclusions": "", "uw": "", "source": "PDF σελ. 13"}, {"name": "Πτώση αεροσκαφών", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Πτώση αεροσκαφών ή τμημάτων τους.", "exclusions": "", "uw": "", "source": "PDF σελ. 13"}, {"name": "Πυρκαγιά από δάσος", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Πυρκαγιά προερχόμενη από δάσος.", "exclusions": "", "uw": "", "source": "PDF σελ. 13"}, {"name": "Έξοδα κατεδάφισης / εκκαθάρισης / συντριμμάτων", "limit": "Μέχρι 1.500€ κατά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Έξοδα κατεδάφισης, εκκαθάρισης και μεταφοράς υπολειμμάτων.", "exclusions": "", "uw": "", "source": "PDF σελ. 13"}, {"name": "Ζημιές οικοδομής από κλοπή μετά από διάρρηξη", "limit": "Σύμφωνα με το ασφαλιζόμενο κεφάλαιο οικοδομής.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Ζημιές στην οικοδομή από κλοπή μετά από διάρρηξη.", "exclusions": "", "uw": "", "source": "PDF σελ. 13"}]}, "full": {"label": "Πλήρες Πακέτο", "inherits": "simple", "coverages": [{"name": "Καταιγίδα / Θύελλα", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Ζημιές έως 750€ αποζημιώνονται εξ ολοκλήρου. Άνω των 750€: 10% της αποζημίωσης, ελάχιστο 750€.", "meaning": "Ζημιές από καταιγίδα και θύελλα.", "exclusions": "", "uw": "", "source": "PDF σελ. 13"}, {"name": "Πλημμύρα", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "10% του ποσού της αποζημίωσης, ελάχιστο 750€.", "meaning": "Ζημιές από πλημμύρα.", "exclusions": "", "uw": "", "source": "PDF σελ. 13"}, {"name": "Χιόνι / Παγετός", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Ζημιές έως 750€ αποζημιώνονται εξ ολοκλήρου. Άνω των 750€: 10% της αποζημίωσης, ελάχιστο 750€.", "meaning": "Ζημιές από χιόνι και παγετό.", "exclusions": "", "uw": "", "source": "PDF σελ. 13"}, {"name": "Διάρρηξη ή υπερχείλιση σωληνώσεων", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Ζημιές έως 750€ αποζημιώνονται εξ ολοκλήρου. Άνω των 750€: 10% της αποζημίωσης, ελάχιστο 750€.", "meaning": "Δεξαμενές ή σωληνώσεις θέρμανσης, ψύξης ή ύδρευσης.", "exclusions": "", "uw": "", "source": "PDF σελ. 14"}, {"name": "Διάρρηξη ή υπερχείλιση sprinklers", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Ζημιές έως 750€ αποζημιώνονται εξ ολοκλήρου. Άνω των 750€: 10% της αποζημίωσης, ελάχιστο 750€.", "meaning": "Σωληνώσεις εγκατάστασης sprinklers.", "exclusions": "", "uw": "", "source": "PDF σελ. 14"}, {"name": "Ηλεκτρικές βλάβες εγκαταστάσεων / μηχανημάτων", "limit": "Μέχρι 1.500€ κατά γεγονός και 3.000€ ετησίως.", "deductible": "150€ σε κάθε ζημιά.", "meaning": "Ηλεκτρικές βλάβες ηλεκτρολογικών εγκαταστάσεων και μηχανημάτων.", "exclusions": "", "uw": "", "source": "PDF σελ. 14"}, {"name": "Θραύση υαλοπινάκων / κρυστάλλων", "limit": "1.800€ κατά γεγονός και 3.000€ ετησίως. Ενεργοποίηση μετά από 2 μήνες.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Εξωτερικές θύρες, παράθυρα, βιτρίνες και προθήκες.", "exclusions": "", "uw": "", "source": "PDF σελ. 14"}, {"name": "Θραύση επιγραφών", "limit": "600€ κατά γεγονός και 1.200€ ετησίως. Ενεργοποίηση μετά από 2 μήνες.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Θραύση επιγραφών.", "exclusions": "", "uw": "", "source": "PDF σελ. 14"}, {"name": "Αλλοίωση εμπορευμάτων σε ψυγεία", "limit": "3.000€ κατά γεγονός και 6.000€ ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Αλλοίωση εμπορευμάτων εντός ψυκτικών θαλάμων και ψυγείων.", "exclusions": "", "uw": "", "source": "PDF σελ. 14"}, {"name": "Αστική ευθύνη λειτουργίας χώρου", "limit": "10.000€ κατά γεγονός και 20.000€ ετησίως.", "deductible": "Σε υλικές ζημιές: 150€ σε κάθε ζημιά.", "meaning": "Αστική ευθύνη από λειτουργία επαγγελματικού χώρου.", "exclusions": "", "uw": "", "source": "PDF σελ. 15"}, {"name": "Ημερήσια αποζημίωση διακοπής εργασιών", "limit": "150€ ημερησίως και μέχρι 90 ημέρες.", "deductible": "Απαλλαγή των 3 πρώτων ημερών.", "meaning": "Προσωρινή διακοπή εργασιών.", "exclusions": "", "uw": "", "source": "PDF σελ. 15"}, {"name": "Σεισμός - Προαιρετική", "limit": "Προαιρετική κάλυψη.", "deductible": "2% επί του συνολικού ασφαλιζόμενου κεφαλαίου υλικών ζημιών σε κάθε ζημιά.", "meaning": "Προαιρετική κάλυψη σεισμού.", "exclusions": "", "uw": "", "source": "PDF σελ. 15"}, {"name": "Κλοπή περιεχομένου μετά από διάρρηξη - Προαιρετική", "limit": "Προαιρετική κάλυψη.", "deductible": "10% του ποσού αποζημίωσης, ελάχιστο 750€.", "meaning": "Κλοπή περιεχομένου μετά από διάρρηξη.", "exclusions": "", "uw": "", "source": "PDF σελ. 15"}, {"name": "Κλοπή χρημάτων συνεπεία ληστείας - Προαιρετική", "limit": "Μέχρι 3.000€ κατά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Χρήματα εντός χρηματοκιβωτίου ή ταμείου συνεπεία ληστείας.", "exclusions": "", "uw": "", "source": "PDF σελ. 15"}]}}}, "business_plus": {"label": "Εθνική & Επιχείρηση PLUS", "kind": "business", "packages": {"simple": {"label": "Απλό Πακέτο", "coverages": [{"name": "Πυρκαγιά - Πτώση κεραυνού", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Βασική κάλυψη πυρκαγιάς και κεραυνού.", "exclusions": "", "uw": "", "source": "PDF σελ. 18"}, {"name": "Έκρηξη", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Ζημιές από έκρηξη.", "exclusions": "", "uw": "", "source": "PDF σελ. 18"}, {"name": "Πτώση αεροσκαφών", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Πτώση αεροσκαφών ή τμημάτων τους.", "exclusions": "", "uw": "", "source": "PDF σελ. 18"}, {"name": "Πυρκαγιά από δάσος", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Πυρκαγιά από δάσος.", "exclusions": "", "uw": "", "source": "PDF σελ. 18"}, {"name": "Καπνός", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Ζημιές από καπνό.", "exclusions": "", "uw": "", "source": "PDF σελ. 18"}, {"name": "Έξοδα κατεδάφισης / εκκαθάρισης", "limit": "5% του συνολικά ασφαλιζόμενου κεφαλαίου, κατά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Έξοδα ερειπίων και συντριμμάτων.", "exclusions": "", "uw": "", "source": "PDF σελ. 18"}, {"name": "Έξοδα κατάσβεσης - πυρόσβεσης", "limit": "Μέχρι 3.000€ κατά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Έξοδα κατάσβεσης / πυρόσβεσης.", "exclusions": "", "uw": "", "source": "PDF σελ. 18"}, {"name": "Έξοδα έκδοσης αδειών αποκατάστασης", "limit": "Μέχρι 5.000€ κατά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Έξοδα έκδοσης αδειών αποκατάστασης ζημιών οικοδομής.", "exclusions": "", "uw": "", "source": "PDF σελ. 18"}, {"name": "Αμοιβές μηχανικών / αρχιτεκτόνων", "limit": "Μέχρι 5.000€ κατά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Αμοιβές μηχανικών και αρχιτεκτόνων.", "exclusions": "", "uw": "", "source": "PDF σελ. 18"}, {"name": "Όρος πρόνοιας", "limit": "Μέχρι 10% του ασφαλιζόμενου κεφαλαίου.", "deductible": "Δεν είναι απαλλαγή.", "meaning": "Όρος πρόνοιας.", "exclusions": "", "uw": "", "source": "PDF σελ. 18"}]}, "composite": {"label": "Σύνθετο Πακέτο", "inherits": "simple", "coverages": [{"name": "Πρόσκρουση οχήματος", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Ζημιές από πρόσκρουση οχήματος.", "exclusions": "", "uw": "", "source": "PDF σελ. 18"}, {"name": "Καταιγίδα / Θύελλα", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Έως 1.000€ χωρίς απαλλαγή. Άνω των 1.000€: 10% κάθε ζημιάς, ελάχιστο 750€ για υπόγεια και 500€ για λοιπούς χώρους.", "meaning": "Ζημιές από καταιγίδα και θύελλα.", "exclusions": "", "uw": "", "source": "PDF σελ. 18"}, {"name": "Πλημμύρα", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Έως 1.000€ χωρίς απαλλαγή. Άνω των 1.000€: 10% κάθε ζημιάς, ελάχιστο 750€ για υπόγεια και 500€ για λοιπούς χώρους.", "meaning": "Ζημιές από πλημμύρα.", "exclusions": "", "uw": "", "source": "PDF σελ. 18"}, {"name": "Χιόνι / Χαλάζι / Παγετός", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "10% του ποσού της ζημιάς, ελάχιστο 500€.", "meaning": "Ζημιές από χιόνι, χαλάζι και παγετό.", "exclusions": "", "uw": "", "source": "PDF σελ. 18"}, {"name": "Διάρρηξη / υπερχείλιση σωληνώσεων και sprinklers", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Έως 1.000€ χωρίς απαλλαγή. Άνω των 1.000€: 10% κάθε ζημιάς, ελάχιστο 750€ για υπόγεια και 500€ για λοιπούς χώρους.", "meaning": "Σωληνώσεις θέρμανσης, ψύξης, ύδρευσης, αποχέτευσης και sprinklers.", "exclusions": "", "uw": "", "source": "PDF σελ. 18"}, {"name": "Έξοδα άντλησης υδάτων", "limit": "Μέχρι 2.000€ κατά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Έξοδα άντλησης υδάτων.", "exclusions": "", "uw": "", "source": "PDF σελ. 18"}]}, "full": {"label": "Πλήρες Πακέτο", "inherits": "composite", "coverages": [{"name": "Ηλεκτρικές βλάβες εγκαταστάσεων / μηχανημάτων", "limit": "Μέχρι 4.000€ κατά γεγονός και ετησίως.", "deductible": "150€ σε κάθε ζημιά.", "meaning": "Ηλεκτρικές βλάβες ηλεκτρολογικών εγκαταστάσεων και μηχανημάτων.", "exclusions": "", "uw": "", "source": "PDF σελ. 19"}, {"name": "Τρομοκρατικές ενέργειες", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Τρομοκρατικές ενέργειες.", "exclusions": "", "uw": "", "source": "PDF σελ. 19"}, {"name": "Πολιτικές ταραχές / στάσεις / απεργίες / οχλαγωγίες", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Πολιτικές ταραχές, στάσεις, απεργίες, διαδηλώσεις και οχλαγωγίες.", "exclusions": "", "uw": "", "source": "PDF σελ. 19"}, {"name": "Κακόβουλη ενέργεια / βανδαλισμός", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Κακόβουλη ενέργεια και βανδαλισμός.", "exclusions": "", "uw": "", "source": "PDF σελ. 19"}, {"name": "Προσωρινή στέγαση και μεταφορά", "limit": "Ενοίκιο έως 2.000€/μήνα μέχρι 6 μήνες. Έξοδα μεταφοράς/επαναφοράς έως 3.000€.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Προσωρινή στέγαση και μεταφορά μετά από ζημιά.", "exclusions": "", "uw": "", "source": "PDF σελ. 19"}, {"name": "Πτώση δένδρων ή στύλων", "limit": "Κόστος απομάκρυνσης έως 1.000€ κατά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Πτώση δένδρων ή ηλεκτρικών/τηλεφωνικών στύλων.", "exclusions": "", "uw": "", "source": "PDF σελ. 19"}, {"name": "Καθίζηση / κατολίσθηση / ύψωση εδάφους", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Καθίζηση, κατολίσθηση, ύψωση εδάφους.", "exclusions": "", "uw": "", "source": "PDF σελ. 19"}, {"name": "Θραύση υαλοπινάκων / κρυστάλλων", "limit": "Με οικοδομή/βελτιώσεις και περιεχόμενο: 3.000€ κατά γεγονός και 6.000€ ετησίως. Μόνο περιεχόμενο: 2.000€ κατά γεγονός και 4.000€ ετησίως. Ενεργοποίηση μετά από 2 μήνες.", "deductible": "200€ σε κάθε ζημιά, εκτός αν προβλέπεται μεγαλύτερη απαλλαγή από τη γενεσιουργό αιτία.", "meaning": "Θραύση θυρών και προθηκών.", "exclusions": "", "uw": "", "source": "PDF σελ. 19"}, {"name": "Ηλεκτρονικός εξοπλισμός κατά παντός κινδύνου", "limit": "Μέχρι 5.000€ κατά γεγονός και ετησίως.", "deductible": "15% επί της αποζημίωσης, ελάχιστο 200€.", "meaning": "Κάλυψη ηλεκτρονικού εξοπλισμού.", "exclusions": "", "uw": "", "source": "PDF σελ. 19"}, {"name": "Κλοπή περιεχομένου και χρημάτων", "limit": "Κλοπή χρημάτων έως 3.000€ κατά γεγονός και ετησίως.", "deductible": "Κλοπή με διάρρηξη: 10% της αποζημίωσης, ελάχιστο 750€.", "meaning": "Βασική κάλυψη στο Πλήρες Πακέτο.", "exclusions": "", "uw": "", "source": "PDF σελ. 20"}, {"name": "Σεισμός - Προαιρετική", "limit": "Προαιρετική κάλυψη.", "deductible": "2% του συνολικά ασφαλιζόμενου κεφαλαίου υλικών ζημιών σε κάθε ζημιά.", "meaning": "Προαιρετική κάλυψη σεισμού.", "exclusions": "", "uw": "", "source": "PDF σελ. 20"}, {"name": "Αλλοίωση εμπορευμάτων - Προαιρετική", "limit": "1η επιλογή: 3% του κεφαλαίου περιεχομένου. 2η επιλογή: 6% του κεφαλαίου περιεχομένου.", "deductible": "1η επιλογή: 150€ κατά γεγονός. 2η επιλογή: 250€ κατά γεγονός.", "meaning": "Αλλοίωση εμπορευμάτων εντός ψυγείων.", "exclusions": "", "uw": "", "source": "PDF σελ. 20"}, {"name": "Αστική ευθύνη λειτουργίας χώρων και εργοδότη - Προαιρετική", "limit": "1η επιλογή: 100.000€. 2η επιλογή: 200.000€ κατά γεγονός και ετησίως.", "deductible": "Υλικές ζημιές: 150€ στην 1η επιλογή, 250€ στη 2η επιλογή.", "meaning": "Αστική ευθύνη λειτουργίας χώρων και εργοδοτική ευθύνη.", "exclusions": "", "uw": "", "source": "PDF σελ. 20"}, {"name": "Απώλεια κερδών ΜΜΕ - Προαιρετική", "limit": "Ίσο με την ασφαλιζόμενη οικοδομή/βελτιώσεις/περιεχόμενο, έως 50% του προσδοκώμενου κύκλου εργασιών. Μέγιστη περίοδος 12 μήνες.", "deductible": "Εκτός σεισμού: 5 πρώτες εργάσιμες ημέρες. Συνεπεία σεισμού: 10 πρώτες εργάσιμες ημέρες.", "meaning": "Απώλεια κερδών μικρομεσαίων επιχειρήσεων.", "exclusions": "", "uw": "", "source": "PDF σελ. 21"}]}}}, "home_full": {"label": "FULL [HOME]", "kind": "home", "packages": {"A": {"label": "Basic", "coverages": [{"name": "Πυρκαγιά", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Βασική κάλυψη πυρκαγιάς.", "exclusions": "", "uw": "", "source": "PDF σελ. 4"}, {"name": "Πτώση κεραυνού", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Ζημιές από πτώση κεραυνού.", "exclusions": "", "uw": "", "source": "PDF σελ. 4"}, {"name": "Έκρηξη φυσική - χημική", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Φυσική ή χημική έκρηξη.", "exclusions": "", "uw": "", "source": "PDF σελ. 4"}, {"name": "Πτώση / πρόσκρουση αεροσκαφών", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Πτώση ή πρόσκρουση αεροσκαφών ή τμημάτων.", "exclusions": "", "uw": "", "source": "PDF σελ. 4"}, {"name": "Τρομοκρατικές ενέργειες", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Τρομοκρατικές ενέργειες.", "exclusions": "", "uw": "", "source": "PDF σελ. 4"}, {"name": "Πυρκαγιά από δάσος", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Πυρκαγιά από δάσος, συστάδες δένδρων, θάμνων κ.λπ.", "exclusions": "", "uw": "", "source": "PDF σελ. 4"}, {"name": "Αστική Ευθύνη από μετάδοση Πυρκαγιάς", "limit": "20% του συνολικού ασφαλιζόμενου κεφαλαίου, μέγιστο 18.000€ ανά γεγονός.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Αστική ευθύνη προς τρίτους από μετάδοση πυρκαγιάς.", "exclusions": "", "uw": "", "source": "PDF σελ. 4"}, {"name": "Έξοδα κατεδάφισης / εκκαθάρισης / ερειπίων", "limit": "5% του κεφαλαίου πυρκαγιάς, μέγιστο 3.000€ ανά γεγονός.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Έξοδα κατεδάφισης και απομάκρυνσης ερειπίων.", "exclusions": "", "uw": "", "source": "PDF σελ. 4"}, {"name": "Καπνός", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Ζημιές από καπνό.", "exclusions": "", "uw": "", "source": "PDF σελ. 4"}, {"name": "Όρος Πρόνοιας", "limit": "20% για οικοδομές.", "deductible": "Δεν είναι απαλλαγή.", "meaning": "Όρος πρόνοιας για οικοδομές.", "exclusions": "", "uw": "", "source": "PDF σελ. 4"}]}, "B": {"label": "Extra", "inherits": "A", "coverages": [{"name": "Διάρρηξη / υπερχείλιση σωληνώσεων", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "5% επί του ποσού ζημιάς, ελάχιστο 350€.", "meaning": "Σωληνώσεις θέρμανσης, ψύξης, ύδρευσης ή αποχέτευσης.", "exclusions": "", "uw": "", "source": "PDF σελ. 4"}, {"name": "Ζημιές οικοδομής από διάρρηξη ή απόπειρα κλοπής", "limit": "Μέχρι 6.000€ ανά γεγονός.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Ισχύει μόνο εφόσον ασφαλίζεται η οικοδομή.", "exclusions": "", "uw": "", "source": "PDF σελ. 4"}, {"name": "Πρόσκρουση οχήματος", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Ζημιές από πρόσκρουση οχήματος.", "exclusions": "", "uw": "", "source": "PDF σελ. 4"}]}, "C": {"label": "Advance", "inherits": "B", "coverages": [{"name": "Θύελλα / Καταιγίδα / Πλημμύρα / Χιόνι / Παγετός", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "5% επί του ποσού ζημιάς, ελάχιστο 350€.", "meaning": "Καιρικά φαινόμενα και πλημμύρα.", "exclusions": "", "uw": "", "source": "PDF σελ. 5"}, {"name": "Αστική ευθύνη από διαρροή ύδατος", "limit": "Μέχρι 1.500€ ανά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Ισχύει μόνο εφόσον ασφαλίζεται η οικοδομή.", "exclusions": "", "uw": "", "source": "PDF σελ. 5"}, {"name": "Έξοδα άντλησης υδάτων", "limit": "Μέχρι 900€ ανά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Έξοδα άντλησης υδάτων.", "exclusions": "", "uw": "", "source": "PDF σελ. 5"}, {"name": "Στάσεις / Απεργίες / Οχλαγωγίες / Πολιτικές Ταραχές", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Κοινωνικές και πολιτικές ταραχές.", "exclusions": "", "uw": "", "source": "PDF σελ. 5"}, {"name": "Κακόβουλη ενέργεια", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Κακόβουλη ενέργεια.", "exclusions": "", "uw": "", "source": "PDF σελ. 5"}, {"name": "Έκρηξη λέβητα / θερμοσίφωνα / υγραερίου", "limit": "Μέχρι 6.000€ ανά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Ισχύει μόνο εφόσον ασφαλίζεται η οικοδομή.", "exclusions": "", "uw": "", "source": "PDF σελ. 5"}, {"name": "Απώλεια μισθώματος", "limit": "Έως 10% του κεφαλαίου οικοδομής, μέγιστη διάρκεια 12 μήνες.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Ισχύει μόνο εφόσον ασφαλίζεται η οικοδομή.", "exclusions": "", "uw": "", "source": "PDF σελ. 5"}]}, "D": {"label": "Max", "inherits": "C", "coverages": [{"name": "Κλοπή οικοσκευής και ζημιές συνεπεία κλοπής", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο οικοσκευής.", "deductible": "5% επί του ποσού ζημιάς, ελάχιστο 500€.", "meaning": "Ισχύει μόνο εφόσον ασφαλίζεται η οικοσκευή.", "exclusions": "", "uw": "", "source": "PDF σελ. 6"}, {"name": "Ληστεία μετρητών και τραπεζικών επιταγών", "limit": "Μέχρι 600€ ανά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Ισχύει μόνο εφόσον ασφαλίζεται η οικοσκευή.", "exclusions": "", "uw": "", "source": "PDF σελ. 6"}, {"name": "Θραύση υαλοπινάκων / καθρεπτών", "limit": "600€ ανά γεγονός και 900€ ετησίως. Ενεργοποιείται μετά από 2 μήνες.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Θύρες, παράθυρα και καθρέπτες.", "exclusions": "", "uw": "", "source": "PDF σελ. 6"}, {"name": "Βραχυκύκλωμα ηλεκτρικού πίνακα / καλωδιώσεων", "limit": "300€ ανά γεγονός και 600€ ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Ισχύει μόνο εφόσον ασφαλίζεται η οικοδομή.", "exclusions": "", "uw": "", "source": "PDF σελ. 6"}, {"name": "Έξοδα μετακόμισης περιεχομένου", "limit": "Μέχρι 600€ ανά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Μετακόμιση ασφαλιζόμενου περιεχομένου.", "exclusions": "", "uw": "", "source": "PDF σελ. 6"}, {"name": "Έξοδα ξενοδοχείου", "limit": "Μέχρι 30 ημέρες και έως 1.800€ ανά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Παραμονή σε ξενοδοχείο μετά από καλυπτόμενη ζημιά.", "exclusions": "", "uw": "", "source": "PDF σελ. 6"}, {"name": "Πτώση δένδρων / στύλων", "limit": "Κόστος απομάκρυνσης έως 300€ ανά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Ισχύει μόνο εφόσον ασφαλίζεται η οικοδομή.", "exclusions": "", "uw": "", "source": "PDF σελ. 6"}, {"name": "Σεισμός - Προαιρετική", "limit": "Προαιρετική κάλυψη.", "deductible": "2% επί του συνολικού ασφαλιζόμενου κεφαλαίου υλικών ζημιών, ελάχιστο 600€.", "meaning": "Προαιρετική κάλυψη σεισμού.", "exclusions": "", "uw": "", "source": "PDF σελ. 6"}]}}}, "home_vip": {"label": "Κατοικία VIP", "kind": "home", "packages": {"vip": {"label": "VIP", "coverages": [{"name": "Κατά Παντός Κινδύνου κατοικίας", "limit": "Συνολική αξία από 300.000€ έως 15.000.000€.", "deductible": "Δεν αναγράφεται γενική απαλλαγή στον πίνακα.", "meaning": "Κάθε αιφνίδια, τυχαία και απρόβλεπτη υλική ζημιά ή απώλεια, εκτός εξαιρέσεων.", "exclusions": "", "uw": "", "source": "PDF σελ. 11"}, {"name": "Βραχυκύκλωμα με εστία φωτιάς", "limit": "Μέχρι 1% του ασφαλιζόμενου κεφαλαίου κατά γεγονός και ετησίως.", "deductible": "200€.", "meaning": "Βραχυκύκλωμα με εστία φωτιάς.", "exclusions": "", "uw": "", "source": "PDF σελ. 10"}, {"name": "Κλοπή οικοσκευής με διάρρηξη / ληστεία", "limit": "Μέχρι 1.500€ κατά γεγονός και ετησίως.", "deductible": "10% επί του ποσού ζημιάς, ελάχιστο 600€.", "meaning": "Κλοπή οικοσκευής ή ληστεία μετρητών/επιταγών.", "exclusions": "", "uw": "", "source": "PDF σελ. 10"}, {"name": "Αστική Ευθύνη έναντι τρίτων", "limit": "Μέχρι 30.000€ κατά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Συνεπεία πυρκαγιάς, έκρηξης ή διαρροής ύδατος.", "exclusions": "", "uw": "", "source": "PDF σελ. 10"}, {"name": "Αλλοίωση τροφίμων", "limit": "Μέχρι 3.000€ κατά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Τρόφιμα εντός ψυγείων / καταψυκτών.", "exclusions": "", "uw": "", "source": "PDF σελ. 10"}, {"name": "Αποκομιδή συντριμμάτων", "limit": "Μέχρι 5% του συνολικά ασφαλισμένου κεφαλαίου.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Αποκομιδή συντριμμάτων.", "exclusions": "", "uw": "", "source": "PDF σελ. 10"}, {"name": "Αμοιβές αρχιτεκτόνων / μηχανικών", "limit": "Μέχρι 20.000€ κατά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Αμοιβές μελετών και επίβλεψης.", "exclusions": "", "uw": "", "source": "PDF σελ. 10"}, {"name": "Θραύση υαλοπινάκων και καθρεπτών", "limit": "3.000€ κατά γεγονός και 6.000€ ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Θύρες, παράθυρα και καθρέπτες.", "exclusions": "", "uw": "", "source": "PDF σελ. 10"}, {"name": "Πτώση δένδρων / στύλων", "limit": "Κόστος απομάκρυνσης έως 1.500€ κατά γεγονός και ετησίως.", "deductible": "Δεν αναγράφεται απαλλαγή στον πίνακα.", "meaning": "Πτώση δένδρων ή ηλεκτρικών/τηλεφωνικών στύλων.", "exclusions": "", "uw": "", "source": "PDF σελ. 10"}, {"name": "Πλημμύρα / Θύελλα / Καταιγίδα / Σωληνώσεις", "limit": "Μέχρι το ασφαλιζόμενο κεφάλαιο.", "deductible": "10% επί του ποσού ζημιάς, ελάχιστο 600€.", "meaning": "Καιρικά φαινόμενα και διάρρηξη σωληνώσεων / υπερχείλιση δεξαμενών.", "exclusions": "", "uw": "", "source": "PDF σελ. 10"}, {"name": "Σεισμός - Προαιρετική", "limit": "Προαιρετική κάλυψη.", "deductible": "2% του συνολικού ασφαλιζόμενου κεφαλαίου υλικών ζημιών.", "meaning": "Προαιρετική κάλυψη σεισμού.", "exclusions": "", "uw": "", "source": "PDF σελ. 10"}, {"name": "Ατομική και Οικογενειακή Αστική Ευθύνη - Προαιρετική", "limit": "Μέχρι 200.000€ ανά γεγονός και ετησίως.", "deductible": "Σε υλικές ζημιές: 150€.", "meaning": "Προαιρετική ατομική και οικογενειακή αστική ευθύνη.", "exclusions": "", "uw": "", "source": "PDF σελ. 10"}]}}}};
+const BUSINESS_NAMES=["Γραφεία", "Καταστήματα λιανικής", "Εστιατόρια - ουζερί - μπυραρίες", "Καφετέριες – μπαρ", "Snack bar", "Super Market – Mini Market", "Συνεργεία αυτοκινήτων", "Φαρμακεία, φαρμακαποθήκες", "Κομμωτήρια", "Κρεοπωλεία", "Ζαχαροπλαστεία", "Αρτοποιίας εργαστήρια", "Βιβλιοπωλεία", "Ανθοπωλεία", "Χαρτοπωλεία", "Φωτογραφεία", "Οδοντιατρεία", "Ιατρεία", "Γυμναστήρια κλειστά", "Πλυντήρια Αυτοκινήτων", "Βουλκανιζατέρ", "Κοσμηματοπωλεία", "Χρυσοχοεία", "Περίπτερα"];
+const UNDERWRITING={"business": ["Εθνική & Επιχείρηση: Περιεχόμενο έως 900.000€ και συνολικό κεφάλαιο οικοδομής/περιεχομένου έως 4.400.000€.", "Εθνική & Επιχείρηση PLUS: συνολικό κεφάλαιο οικοδομής/βελτιώσεων/περιεχομένου έως 1.500.000€.", "Απαιτείται άδεια λειτουργίας όπου προβλέπεται και ισχύοντα μέτρα πυροπροστασίας.", "Για κλοπή περιεχομένου απαιτούνται ικανοποιητικά μέτρα προστασίας, δηλωμένα στην πρόταση.", "Για σεισμό απαιτείται έντυπο σεισμού. Για κτίρια προ του 1960 απαιτείται δελτίο τρωτότητας μηχανικού.", "Δεν μπορούν να αφαιρεθούν μεμονωμένες καλύψεις από τα πακέτα."], "home": ["FULL [HOME]: προϊόν κατοικίας με πακέτα Α, Β, C, D και προαιρετικό σεισμό.", "VIP: για συνολική ασφαλιζόμενη αξία κατοικίας από 300.000€ έως 15.000.000€.", "Για κτίρια προ του 1950 παρέχεται ασφάλιση αποκλειστικά σε τρέχουσα πραγματική αξία.", "Για σεισμό απαιτείται υπογεγραμμένο έντυπο σεισμού.", "Για κτίρια προ του 1960 απαιτείται δελτίο τρωτότητας μηχανικού."]};
+let selectedProduct="business_plus", selectedPackage="full";
+const el=id=>document.getElementById(id);
+function product(){return DATA[selectedProduct]}
+function order(k){const pref=["simple","composite","full","A","B","C","D","vip"];return Object.keys(DATA[k].packages).sort((a,b)=>pref.indexOf(a)-pref.indexOf(b))}
+function covers(pk,pack){const p=DATA[pk].packages[pack];let arr=[];if(p.inherits)arr=covers(pk,p.inherits);return arr.concat(p.coverages)}
+function initProducts(){el("product").innerHTML="";Object.entries(DATA).forEach(([k,p])=>{const o=document.createElement("option");o.value=k;o.textContent=p.label;el("product").appendChild(o)});el("product").value=selectedProduct}
+function initBusinesses(q=""){q=q.toLowerCase().trim();const list=BUSINESS_NAMES.filter(x=>x.toLowerCase().includes(q));const s=el("businessType"),cur=s.value;s.innerHTML="";list.forEach(x=>{const o=document.createElement("option");o.value=x;o.textContent=x;s.appendChild(o)});if(list.includes(cur))s.value=cur;else if(list.length)s.value=list[0];el("businessCount").textContent=list.length+" δραστηριότητες"}
+function renderPackages(){const box=el("packageButtons");box.innerHTML="";const keys=order(selectedProduct);if(!keys.includes(selectedPackage))selectedPackage=keys[keys.length-1];keys.forEach(k=>{const b=document.createElement("button");b.type="button";b.textContent=DATA[selectedProduct].packages[k].label;b.className=k===selectedPackage?"active":"";b.onclick=()=>{selectedPackage=k;render()};box.appendChild(b)})}
+function renderCoverages(){const list=covers(selectedProduct,selectedPackage);el("help").textContent=list.length+" καλύψεις για "+DATA[selectedProduct].packages[selectedPackage].label;const box=el("coverages");box.innerHTML="";list.forEach(c=>{const b=document.createElement("button");b.type="button";b.className="coverage";b.innerHTML=c.name+'<br><span class="tag">'+c.source+'</span>';b.onclick=()=>show(c);box.appendChild(b)})}
+function show(c){el("mTitle").textContent=c.name;el("mLimit").textContent=c.limit;el("mDed").textContent=c.deductible;el("mMean").textContent=c.meaning;el("mExc").textContent=c.exclusions||"Δεν αναγράφεται ειδική εξαίρεση στον πίνακα της συγκεκριμένης κάλυψης.";el("mUw").textContent=c.uw||"Έλεγχος σύμφωνα με τους κανόνες ανάληψης του προϊόντος και την πρόταση ασφάλισης.";el("mSource").textContent=c.source;el("modal").classList.add("show")}
+function renderRules(){const rules=UNDERWRITING[product().kind]||[];el("rules").innerHTML="<ul>"+rules.map(x=>"<li>"+x+"</li>").join("")+"</ul>"}
+function renderSummary(){const p=product(), pack=p.packages[selectedPackage].label, extra=p.kind==="business"?" · "+(el("businessType").value||""):"";el("summary").textContent=p.label+" · "+pack+extra;el("badge").textContent=p.kind==="business"?"Επιχείρηση":"Κατοικία"}
+function render(){el("businessBox").classList.toggle("hidden",product().kind!=="business");renderPackages();renderCoverages();renderRules();renderSummary()}
+function analyze(){render();const list=covers(selectedProduct,selectedPackage), notes=el("notes").value.trim();el("note").innerHTML="<p><strong>"+el("summary").textContent+"</strong></p><p>Εμφανίζονται μόνο οι καλύψεις του επιλεγμένου πακέτου. Κάθε κάλυψη έχει popup με όριο, απαλλαγή, ερμηνεία και πηγή PDF.</p><p><strong>Σύνολο καλύψεων:</strong> "+list.length+"</p>"+(notes?"<p><strong>Σχόλια:</strong> "+notes.replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m]))+"</p>":"")}
+function copyResult(){const text=[el("summary").textContent,...covers(selectedProduct,selectedPackage).map(c=>c.name+"\nΌριο: "+c.limit+"\nΑπαλλαγή: "+c.deductible+"\nΠηγή: "+c.source)].join("\n\n");navigator.clipboard.writeText(text).then(()=>{el("toast").classList.add("show");setTimeout(()=>el("toast").classList.remove("show"),1500)})}
+el("product").onchange=e=>{selectedProduct=e.target.value;selectedPackage=order(selectedProduct).slice(-1)[0];render()};el("businessSearch").oninput=e=>{initBusinesses(e.target.value);renderSummary()};el("businessType").onchange=renderSummary;el("analyzeBtn").onclick=analyze;el("copyBtn").onclick=copyResult;el("mClose").onclick=()=>el("modal").classList.remove("show");el("modal").onclick=e=>{if(e.target.id==="modal")el("modal").classList.remove("show")};document.addEventListener("keydown",e=>{if(e.key==="Escape")el("modal").classList.remove("show")});
+initProducts();initBusinesses();render();
+
+
+// ===== v11 SEPARATE FIRE / AUTO SECTIONS =====
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","\'":"&#39;"}[ch]));
+}
+
+const AUTO_EMBEDDED = {"coverages":{"third_party":{"name":"Αστική Ευθύνη έναντι τρίτων","limit":"1.300.000€ ανά θύμα για σωματικές βλάβες και 1.300.000€ για υλικές ζημιές ανά γεγονός.","deductible":"Χωρίς απαλλαγή.","meaning":"Υποχρεωτική αστική ευθύνη από την κυκλοφορία.","source":"PDF σελ. 7"},"fire_liability":{"name":"Αστική Ευθύνη Πυρός","limit":"15.000€ για σωματικές βλάβες και 15.000€ για υλικές ζημιές.","deductible":"Χωρίς απαλλαγή.","meaning":"Ζημιές προς τρίτους από πυρκαγιά που δεν συνδέεται με την κυκλοφορία.","source":"PDF σελ. 8"},"uninsured":{"name":"Υλικές Ζημιές από Ανασφάλιστο Όχημα","limit":"100.000€ ετησίως.","deductible":"Χωρίς απαλλαγή.","meaning":"Ζημιές από ανασφάλιστο όχημα με αποκλειστική και αποδεδειγμένη υπαιτιότητά του.","source":"PDF σελ. 7"},"driver":{"name":"Προσωπικό Ατύχημα Οδηγού","limit":"ΕΙΧ: 5.000€ ή 15.000€. Φορτηγά/Λεωφορεία: 20.000€. Ιατρικά έως 500€ και επίδομα 50€/ημέρα έως 30 ημέρες.","deductible":"Χωρίς απαλλαγή.","meaning":"Θάνατος, ανικανότητα, ιατρικά έξοδα και επίδομα νοσηλείας οδηγού.","source":"PDF σελ. 9 και 15"},"glass":{"name":"Θραύση Κρυστάλλων","limit":"ΕΙΧ: 1.000€ ή 3.000€. Φορτηγά: 3.000€. Λεωφορεία ΔΧ: 7.000€. Λεωφορεία ΙΧ: 6.500€.","deductible":"150€. Μηδενική σε συνεργαζόμενο εξειδικευμένο συνεργείο για ΕΙΧ και φορτηγά έως 3,5 τόνους.","meaning":"Θραύση κρυστάλλων από τυχαίο γεγονός.","source":"PDF σελ. 10 και 15"},"legal":{"name":"Νομική Προστασία","limit":"ΕΙΧ: 3.000€, 5.000€ ή 15.000€. Λοιπές χρήσεις έως 15.000€.","deductible":"Χωρίς απαλλαγή.","meaning":"Δικαστικές και εξωδικαστικές δαπάνες.","source":"PDF σελ. 10 και 15"},"airbags":{"name":"Κάλυψη Αερόσακων","limit":"1.000€ ανά ασφαλιστικό έτος.","deductible":"Χωρίς απαλλαγή.","meaning":"Αντικατάσταση αερόσακων και ζωνών ασφαλείας μετά από υπαίτιο ατύχημα.","source":"PDF σελ. 12"},"outside":{"name":"Έξοδα Ατυχήματος εκτός Φιλικού","limit":"Υλικές ζημιές έως 6.500€ και ιατρικές/νοσηλεία έως 12.000€.","deductible":"Χωρίς απαλλαγή.","meaning":"Όταν το υπαίτιο όχημα είναι ασφαλισμένο σε εταιρία εκτός Φιλικού Διακανονισμού.","source":"PDF σελ. 11"},"fire":{"name":"Πυρκαγιά Οχήματος","limit":"Μέχρι την τρέχουσα εμπορική αξία.","deductible":"Χωρίς απαλλαγή.","meaning":"Πυρκαγιά, κεραυνός, έκρηξη και αυτόματη ανάφλεξη.","source":"PDF σελ. 8"},"terror":{"name":"Τρομοκρατικές Ενέργειες Πυρός","limit":"Μέχρι την ασφαλισμένη αξία.","deductible":"Χωρίς απαλλαγή.","meaning":"Πυρκαγιά ή έκρηξη από τρομοκρατικές πράξεις.","source":"PDF σελ. 8"},"natural":{"name":"Φυσικά Φαινόμενα","limit":"Μέχρι την ασφαλισμένη αξία.","deductible":"200€ ή 100€ σε συνεργαζόμενο συνεργείο.","meaning":"Πλημμύρα, χαλάζι, τυφώνας ή σεισμός.","source":"PDF σελ. 9"},"theft":{"name":"Ολική & Μερική Κλοπή","limit":"Ολική: τρέχουσα εμπορική αξία. Πρόσθετα σταθερά εξαρτήματα έως 500€.","deductible":"Δεν αναγράφεται απαλλαγή.","meaning":"Ολική κλοπή και αφαίρεση σταθερά προσδεμένων εξαρτημάτων.","source":"PDF σελ. 8"},"replacement":{"name":"Αντικατάσταση λόγω Κλοπής / Πυρκαγιάς","limit":"45 ημέρες σε κλοπή και 15 ημέρες σε πυρκαγιά.","deductible":"Χωρίς απαλλαγή.","meaning":"Όχημα αντικατάστασης για ΕΙΧ με ελάχιστη αξία 3.000€.","source":"PDF σελ. 8"},"keys":{"name":"Αντικατάσταση Κλειδιών","limit":"Κόστος αντικατάστασης κλειδιών.","deductible":"Χωρίς απαλλαγή.","meaning":"Κλοπή ή απώλεια κλειδιών μετά από 30 ημέρες και δήλωση στην Αστυνομία.","source":"PDF σελ. 9"},"own_theft":{"name":"Ζημιές Ιδίου Συνεπεία Κλοπής","limit":"Μέχρι την ασφαλισμένη αξία.","deductible":"400€.","meaning":"Ζημιές όσο το όχημα βρίσκεται στην κατοχή του κλέφτη.","source":"PDF σελ. 10"},"own":{"name":"Ζημιές Ιδίου Οχήματος (Μικτή)","limit":"Μέχρι την ασφαλισμένη αξία.","deductible":"ΕΙΧ: 400/700/1.000/1.300/1.600€. Από αξία 30.000€ δεν επιτρέπεται 400€. Φορτηγά/Μηχανήματα/ΔΧ: 2% της αξίας, ελάχιστο 400€ ή 700€ για αξία άνω 30.000€.","meaning":"Ζημιές με υπαιτιότητα ασφαλισμένου. Απαιτείται προασφαλιστικός έλεγχος και έγκριση.","source":"PDF σελ. 9"},"malicious":{"name":"Κακόβουλες Ζημιές Ιδίου","limit":"Μέχρι την ασφαλισμένη αξία.","deductible":"Ελάχιστο 400€ έως αξία 30.000€ και 700€ για μεγαλύτερη αξία.","meaning":"Κακόβουλες ενέργειες τρίτων, μαζί με τη Μικτή.","source":"PDF σελ. 10"},"tow":{"name":"Τοπική Ρυμούλκηση","limit":"Ρυμούλκηση μετά από ατύχημα.","deductible":"Χωρίς απαλλαγή.","meaning":"Όταν το όχημα δεν μπορεί να κινηθεί με ασφάλεια.","source":"PDF σελ. 10"},"road":{"name":"Οδική Βοήθεια / FULL Οδική Βοήθεια","limit":"Πλήρης οδική βοήθεια. Στη FULL όχημα αντικατάστασης έως 7 ημέρες.","deductible":"Χωρίς απαλλαγή.","meaning":"Μεταφορά οχήματος, επαναπατρισμός και λοιπές παροχές.","source":"PDF σελ. 10-11"},"tool":{"name":"Αστική Ευθύνη ως Εργαλείο","limit":"15.000€ / 30.000€ / 50.000€ / 75.000€ / 100.000€ / 200.000€.","deductible":"Χωρίς απαλλαγή.","meaning":"Ευθύνη από μηχάνημα που αποτελεί εξάρτημα του οχήματος.","source":"PDF σελ. 7 και 15"}},"products":[{"id":"fullauto","title":"FullAuto","rules":["Full Standard: βασικό εμπορικό πακέτο ΕΙΧ, με τις καλύψεις του πρώην FullAuto V2.","Full Value: ελάχιστη ασφαλιστική αξία 2.000€ και ηλικία οχήματος έως 15 έτη.","Full Premium: ελάχιστη ασφαλιστική αξία 3.000€ και ηλικία οχήματος έως 12 έτη.","Όρια συνεργάτη ΕΙΧ: έως 50.000€ για καινούργια/έως 2 ετών και έως 25.000€ για μεταχειρισμένα 2-15 ετών.","Η Μικτή απαιτεί προασφαλιστικό έλεγχο και έγκριση της Εταιρίας."],"packages":[{"id":"v2","title":"Full Standard","statuses":{"third_party":"required","fire_liability":"required","uninsured":"required","driver":"optional","glass":"optional","legal":"required","airbags":"optional","outside":"optional","fire":"unavailable","terror":"unavailable","natural":"unavailable","theft":"unavailable","replacement":"unavailable","keys":"required","own_theft":"unavailable","own":"unavailable","malicious":"unavailable","tow":"required","road":"optional"}},{"id":"v3","title":"Full Value","statuses":{"third_party":"required","fire_liability":"required","uninsured":"required","driver":"required","glass":"optional","legal":"required","airbags":"optional","outside":"optional","fire":"required","terror":"required","natural":"required","theft":"required","replacement":"required","keys":"required","own_theft":"required","own":"unavailable","malicious":"unavailable","tow":"required","road":"optional"}},{"id":"v4","title":"Full Premium","statuses":{"third_party":"required","fire_liability":"required","uninsured":"required","driver":"required","glass":"required","legal":"required","airbags":"unavailable","outside":"optional","fire":"required","terror":"required","natural":"required","theft":"required","replacement":"required","keys":"required","own_theft":"required","own":"required","malicious":"required","tow":"required","road":"optional"}}]},{"id":"autoprotect","title":"Auto Protect","rules":["Extra: αξία ≥2.000€ και ηλικία ≤15 έτη.","Premium: αξία ≥3.000€ και ηλικία ≤15 έτη.","Όρος εγγύησης αξίας 3 ετών για επιλέξιμα πρωτοκυκλοφορούντα ΕΙΧ έως 50.000€."],"packages":[{"id":"classic","title":"Auto Protect Classic","statuses":{"third_party":"required","uninsured":"required","driver":"optional","glass":"optional","legal":"optional","fire":"unavailable","terror":"unavailable","natural":"unavailable","theft":"unavailable","replacement":"unavailable","own_theft":"unavailable","own":"unavailable","malicious":"unavailable","tow":"required","road":"optional"}},{"id":"extra","title":"Auto Protect Extra","statuses":{"third_party":"required","uninsured":"required","driver":"required","glass":"optional","legal":"required","fire":"required","terror":"required","natural":"required","theft":"required","replacement":"required","own_theft":"unavailable","own":"unavailable","malicious":"unavailable","tow":"required","road":"optional"}},{"id":"premium","title":"Auto Protect Premium","statuses":{"third_party":"required","uninsured":"required","driver":"required","glass":"required","legal":"required","fire":"required","terror":"required","natural":"required","theft":"required","replacement":"required","own_theft":"required","own":"required","malicious":"required","tow":"required","road":"optional"}}]},{"id":"fulltruck","title":"FullTruck","rules":["Για ΦΙΧ, ΦΙΧ Αγροτικά και ΦΙΧ Ψυγεία έως 20 φορολογήσιμους ίππους και ηλικία έως 12 έτη.","Όρια συνεργάτη λοιπών χρήσεων: 50.000€ έως 2 ετών και 25.000€ για ηλικία 2-12 ετών.","Η Μικτή απαιτεί προασφαλιστικό έλεγχο και έγκριση."],"packages":[{"id":"v1","title":"FullTruck V1","statuses":{"third_party":"required","fire_liability":"required","tool":"optional","uninsured":"required","driver":"optional","glass":"optional","legal":"optional","airbags":"optional","outside":"optional","fire":"unavailable","terror":"unavailable","natural":"unavailable","theft":"unavailable","own_theft":"unavailable","own":"unavailable","malicious":"unavailable","tow":"required","road":"optional"}},{"id":"v3","title":"FullTruck V3","statuses":{"third_party":"required","fire_liability":"required","tool":"optional","uninsured":"required","driver":"required","glass":"optional","legal":"required","airbags":"optional","outside":"optional","fire":"required","terror":"required","natural":"required","theft":"required","own_theft":"required","own":"unavailable","malicious":"unavailable","tow":"required","road":"optional"}},{"id":"v4","title":"FullTruck V4","statuses":{"third_party":"required","fire_liability":"required","tool":"optional","uninsured":"required","driver":"required","glass":"optional","legal":"required","airbags":"unavailable","outside":"optional","fire":"required","terror":"required","natural":"required","theft":"required","own_theft":"required","own":"required","malicious":"required","tow":"required","road":"optional"}}]}]};
+let AUTO = AUTO_EMBEDDED;
+let activeBranch = null;
+let autoReady = false;
+
+function isAuto() {
+  return String(selectedProduct).startsWith("auto:");
+}
+
+function autoProduct() {
+  if (!AUTO || !isAuto()) return null;
+  return AUTO.products.find(p => p.id === selectedProduct.split(":")[1]) || null;
+}
+
+function autoPack() {
+  const product = autoProduct();
+  return product ? product.packages.find(p => p.id === selectedPackage) || null : null;
+}
+
+function allowedAutoProductIds() {
+  const use = el("vehicleUse")?.value || "eix";
+  if (use === "eix") return ["fullauto", "autoprotect"];
+  if (["fix", "fix_agro", "fix_fridge"].includes(use)) return ["fulltruck"];
+  return [];
+}
+
+function autoCoverages() {
+  const pack = autoPack();
+  if (!pack || !AUTO) return [];
+  return Object.entries(pack.statuses)
+    .filter(([, status]) => status !== "unavailable")
+    .map(([id, status]) => ({ ...AUTO.coverages[id], status }));
+}
+
+function setBranchPanels(branch) {
+  const fire = branch === "fire";
+  el("fireResultPanel")?.classList.toggle("hidden", !fire);
+  el("autoResultPanel")?.classList.toggle("hidden", fire);
+  el("businessBox")?.classList.toggle("hidden", !fire || selectedProduct === "home");
+  el("autoBox")?.classList.toggle("hidden", fire);
+}
+
+function refreshAutoProductOptions() {
+  if (!AUTO) return;
+
+  const select = el("product");
+  [...select.options]
+    .filter(option => String(option.value).startsWith("auto:"))
+    .forEach(option => option.remove());
+
+  const allowed = allowedAutoProductIds();
+  AUTO.products
+    .filter(product => allowed.includes(product.id))
+    .forEach(product => {
+      const option = document.createElement("option");
+      option.value = "auto:" + product.id;
+      option.textContent = product.title;
+      select.appendChild(option);
+    });
+}
+
+function loadAuto() {
+  AUTO = AUTO_EMBEDDED;
+  autoReady = true;
+  refreshAutoProductOptions();
+  const button = el("autoBranchBtn");
+  button.disabled = false;
+  button.classList.remove("loading");
+}
+
+const originalFireRender = render;
+const originalFireAnalyze = analyze;
+const originalFireCopy = copyResult;
+
+function renderAuto() {
+  setBranchPanels("auto");
+
+  const product = autoProduct();
+  if (!product) {
+    el("packageButtons").innerHTML = "";
+    el("autoCoverages").innerHTML = "";
+    el("autoHelp").textContent = "Δεν βρέθηκε διαθέσιμο πακέτο αυτοκινήτου.";
+    el("autoRules").innerHTML = "<p>Απαιτείται ανανέωση της σελίδας.</p>";
+    el("autoSummary").textContent = "Αυτοκίνητο";
+    el("autoBadge").textContent = "Σφάλμα";
+    return;
+  }
+
+  if (!product.packages.some(p => p.id === selectedPackage)) {
+    selectedPackage = product.packages[0].id;
+  }
+
+  const packageBox = el("packageButtons");
+  packageBox.innerHTML = "";
+
+  product.packages.forEach(pack => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = pack.title;
+    button.className = pack.id === selectedPackage ? "active" : "";
+    button.addEventListener("click", () => {
+      selectedPackage = pack.id;
+      renderAuto();
+    });
+    packageBox.appendChild(button);
+  });
+
+  const list = autoCoverages();
+  el("autoHelp").textContent =
+    `${list.length} καλύψεις για ${autoPack().title}. Πάτησε σε μία κάλυψη για λεπτομέρειες.`;
+
+  const grid = el("autoCoverages");
+  grid.innerHTML = "";
+
+  list.forEach(coverage => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "coverage";
+    const status = coverage.status === "required" ? "Υποχρεωτική" : "Προαιρετική";
+    button.innerHTML =
+      `${escapeHtml(coverage.name)}<br><span class="tag">${status} · ${escapeHtml(coverage.source)}</span>`;
+
+    button.addEventListener("click", () => {
+      el("mTitle").textContent = coverage.name;
+      el("mLimit").textContent = coverage.limit;
+      el("mDed").textContent = coverage.deductible;
+      el("mMean").textContent = coverage.meaning;
+      el("mExc").textContent =
+        "Ισχύουν οι γενικοί και ειδικοί όροι της συγκεκριμένης κάλυψης.";
+      el("mUw").textContent =
+        "Ελέγχονται η χρήση, η ηλικία, η αξία, η κατάσταση του οχήματος και η ανάγκη προασφαλιστικού ελέγχου ή έγκρισης.";
+      el("mSource").textContent = coverage.source;
+      el("modal").classList.add("show");
+    });
+
+    grid.appendChild(button);
+  });
+
+  el("autoRules").innerHTML =
+    "<ul>" + product.rules.map(rule => `<li>${escapeHtml(rule)}</li>`).join("") + "</ul>";
+
+  el("autoSummary").textContent = `${product.title} · ${autoPack().title}`;
+  el("autoBadge").textContent = "Αυτοκίνητο";
+}
+
+render = function () {
+  if (isAuto()) {
+    renderAuto();
+    return;
+  }
+
+  setBranchPanels("fire");
+  originalFireRender();
+};
+
+analyze = function () {
+  if (!isAuto()) {
+    setBranchPanels("fire");
+    originalFireAnalyze();
+    return;
+  }
+
+  renderAuto();
+
+  const product = autoProduct();
+  const pack = autoPack();
+  const age = Number(el("vehicleAge").value || 0);
+  const value = Number(el("vehicleValue").value || 0);
+  const special = el("vehicleSpecial").value;
+  const use = el("vehicleUse").value;
+  const warnings = [];
+  let requiresInspection = false;
+  let requiresApproval = false;
+  let eligible = true;
+
+  if (product.id === "fullauto") {
+    if (selectedPackage === "v3" && age > 15) {
+      warnings.push("Το Full Value παρέχεται για οχήματα έως 15 ετών.");
+      eligible = false;
+    }
+    if (selectedPackage === "v4" && age > 12) {
+      warnings.push("Το Full Premium παρέχεται για οχήματα έως 12 ετών.");
+      eligible = false;
+    }
+    if (selectedPackage === "v3" && value && value < 2000) {
+      warnings.push("Ελάχιστη ασφαλιστική αξία Full Value: 2.000€.");
+      eligible = false;
+    }
+    if (selectedPackage === "v4" && value && value < 3000) {
+      warnings.push("Ελάχιστη ασφαλιστική αξία Full Premium: 3.000€.");
+      eligible = false;
+    }
+  }
+
+  if (product.id === "autoprotect") {
+    if (["extra", "premium"].includes(selectedPackage) && age > 15) {
+      warnings.push("Τα Auto Protect Extra και Premium παρέχονται έως 15 έτη.");
+      eligible = false;
+    }
+    if (selectedPackage === "extra" && value && value < 2000) {
+      warnings.push("Ελάχιστη ασφαλιστική αξία Auto Protect Extra: 2.000€.");
+      eligible = false;
+    }
+    if (selectedPackage === "premium" && value && value < 3000) {
+      warnings.push("Ελάχιστη ασφαλιστική αξία Auto Protect Premium: 3.000€.");
+      eligible = false;
+    }
+  }
+
+  if (product.id === "fulltruck" && age > 12) {
+    warnings.push("Τα FullTruck παρέχονται για επιλέξιμες χρήσεις έως 12 ετών.");
+    eligible = false;
+  }
+
+  if (value > 50000 || special === "high") {
+    warnings.push("Για αξία άνω των 50.000€ απαιτείται ειδική προσφορά από την Εταιρία.");
+    requiresApproval = true;
+  }
+
+  if (special === "smart") {
+    warnings.push("Για Smart απαιτείται ειδική έγκριση και δεν παρέχεται αντικατάσταση λόγω κλοπής.");
+    requiresApproval = true;
+  }
+
+  if (special === "moto" || use === "moto") {
+    warnings.push("Δεν παρέχεται κάλυψη κλοπής σε μηχανές και μοτοποδήλατα.");
+    requiresApproval = true;
+  }
+
+  if (special === "transfer") {
+    warnings.push("Για transfer / μεταφορά προσωπικού απαιτείται ειδική προσφορά.");
+    requiresApproval = true;
+  }
+
+  const mixed = autoCoverages().some(c => c.name.includes("Ζημιές Ιδίου"));
+  if (mixed) {
+    warnings.push("Η Μικτή απαιτεί προασφαλιστικό έλεγχο και έγκριση της Εταιρίας.");
+    requiresInspection = true;
+    requiresApproval = true;
+  }
+
+  const notes = el("notes").value.trim();
+  const statusText = eligible ? "Επιλέξιμο βάσει βασικών ορίων" : "Μη επιλέξιμο βάσει βασικών ορίων";
+
+  el("autoBadge").textContent = eligible ? "Επιλέξιμο" : "Έλεγχος";
+  el("autoNote").innerHTML = `
+    <div class="analysis-status ${eligible ? "ok" : "warning"}">
+      <strong>${statusText}</strong>
+    </div>
+    <p><strong>Προϊόν:</strong> ${escapeHtml(product.title)}</p>
+    <p><strong>Πακέτο:</strong> ${escapeHtml(pack.title)}</p>
+    <p><strong>Ηλικία οχήματος:</strong> ${age || "Δεν δηλώθηκε"}</p>
+    <p><strong>Αξία οχήματος:</strong> ${value ? value.toLocaleString("el-GR") + "€" : "Δεν δηλώθηκε"}</p>
+    <p><strong>Προασφαλιστικός έλεγχος:</strong> ${requiresInspection ? "Ναι" : "Δεν προκύπτει από τα δηλωμένα στοιχεία"}</p>
+    <p><strong>Έγκριση Εταιρίας:</strong> ${requiresApproval ? "Ναι" : "Δεν προκύπτει από τα δηλωμένα στοιχεία"}</p>
+    ${warnings.length
+      ? `<p><strong>Παρατηρήσεις ανάληψης:</strong></p>
+         <ul>${warnings.map(w => `<li>${escapeHtml(w)}</li>`).join("")}</ul>`
+      : "<p><strong>Δεν εντοπίστηκε προφανής υπέρβαση των βασικών ορίων.</strong></p>"}
+    ${notes ? `<p><strong>Σχόλια:</strong> ${escapeHtml(notes)}</p>` : ""}
+  `;
+
+  el("autoResultPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+};
+
+copyResult = async function () {
+  if (!isAuto()) {
+    originalFireCopy();
+    return;
+  }
+
+  const text = [
+    el("autoSummary").textContent,
+    el("autoNote").innerText,
+    "",
+    "Καλύψεις:",
+    ...autoCoverages().map(c =>
+      `${c.name} (${c.status === "required" ? "Υποχρεωτική" : "Προαιρετική"})`
+    )
+  ].join("\n");
+
+  await navigator.clipboard.writeText(text);
+  el("toast").classList.add("show");
+  setTimeout(() => el("toast").classList.remove("show"), 1500);
+};
+
+function applyBranchProductFilter() {
+  const select = el("product");
+
+  [...select.options].forEach(option => {
+    const autoOption = String(option.value).startsWith("auto:");
+    option.hidden =
+      activeBranch === "fire" ? autoOption :
+      activeBranch === "auto" ? !autoOption :
+      false;
+  });
+}
+
+function resetSharedInputs() {
+  el("notes").value = "";
+  el("note").innerHTML = "Πάτησε «Ανάλυση underwriting» για σύνοψη.";
+  el("autoNote").innerHTML =
+    "Συμπλήρωσε τα στοιχεία του οχήματος και πάτησε «Ανάλυση underwriting».";
+}
+
+function showLanding() {
+  activeBranch = null;
+  resetSharedInputs();
+  el("landingScreen").classList.remove("hidden");
+  el("mainApplication").classList.add("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function openFireBranch() {
+  activeBranch = "fire";
+
+  const select = el("product");
+  const option = [...select.options].find(o => !String(o.value).startsWith("auto:"));
+
+  if (option) {
+    selectedProduct = option.value;
+    select.value = option.value;
+    const packages = order(selectedProduct);
+    selectedPackage = packages[packages.length - 1];
+  }
+
+  applyBranchProductFilter();
+  el("landingScreen").classList.add("hidden");
+  el("mainApplication").classList.remove("hidden");
+  setBranchPanels("fire");
+  originalFireRender();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function openAutoBranch() {
+  if (!autoReady || !AUTO) return;
+
+  activeBranch = "auto";
+  refreshAutoProductOptions();
+
+  const select = el("product");
+  const option = [...select.options].find(o => String(o.value).startsWith("auto:"));
+
+  el("landingScreen").classList.add("hidden");
+  el("mainApplication").classList.remove("hidden");
+  setBranchPanels("auto");
+
+  if (!option) {
+    el("packageButtons").innerHTML = "";
+    el("autoCoverages").innerHTML = "";
+    el("autoHelp").textContent =
+      "Δεν υπάρχει τυποποιημένο πακέτο για την επιλεγμένη χρήση.";
+    el("autoRules").innerHTML =
+      "<p><strong>Απαιτείται ειδική προσφορά / έγκριση Κλάδου.</strong></p>";
+    return;
+  }
+
+  selectedProduct = option.value;
+  select.value = option.value;
+  selectedPackage = autoProduct().packages[0].id;
+  applyBranchProductFilter();
+  renderAuto();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+el("fireBranchBtn").addEventListener("click", openFireBranch);
+
+el("autoBranchBtn").disabled = true;
+el("autoBranchBtn").classList.add("loading");
+el("autoBranchBtn").addEventListener("click", openAutoBranch);
+
+el("backHomeBtn")?.addEventListener("click", showLanding);
+
+const originalProductChange = el("product").onchange;
+el("product").onchange = event => {
+  const value = event.target.value;
+
+  if (activeBranch === "auto" && String(value).startsWith("auto:")) {
+    selectedProduct = value;
+    selectedPackage = autoProduct()?.packages?.[0]?.id || "";
+    renderAuto();
+    return;
+  }
+
+  if (activeBranch === "fire" && !String(value).startsWith("auto:")) {
+    originalProductChange?.(event);
+    setBranchPanels("fire");
+  }
+};
+
+el("vehicleUse")?.addEventListener("change", () => {
+  refreshAutoProductOptions();
+  const allowed = allowedAutoProductIds();
+
+  if (!allowed.length) {
+    el("packageButtons").innerHTML = "";
+    el("autoCoverages").innerHTML = "";
+    el("autoHelp").textContent =
+      "Για αυτή τη χρήση δεν υπάρχει τυποποιημένο πακέτο στο διαθέσιμο εγχειρίδιο.";
+    el("autoRules").innerHTML =
+      "<p><strong>Απαιτείται εξατομικευμένη προσφορά / έγκριση Κλάδου.</strong></p>";
+    el("autoSummary").textContent = "Αυτοκίνητο · Ειδική χρήση";
+    el("autoBadge").textContent = "Ειδική έγκριση";
+    return;
+  }
+
+  selectedProduct = "auto:" + allowed[0];
+  el("product").value = selectedProduct;
+  selectedPackage = autoProduct()?.packages?.[0]?.id || "";
+  renderAuto();
+});
+
+showLanding();
+loadAuto();
+
+
+// v12: bind buttons to the active branch functions, not to the original fire handlers.
+el("analyzeBtn").onclick = () => analyze();
+el("copyBtn").onclick = () => copyResult();
+el("backHomeBtn")?.addEventListener("click", showLanding);
+el("floatingHomeBtn")?.addEventListener("click", showLanding);
+
+
+// Automated browser self-test: runs only with ?smoketest=1
+window.addEventListener("load", () => {
+  if (!new URLSearchParams(location.search).has("smoketest")) return;
+  try {
+    el("fireBranchBtn").click();
+    const firePackages = el("packageButtons").children.length;
+    const fireCovers = el("coverages").children.length;
+    showLanding();
+    el("autoBranchBtn").click();
+    const autoPackages = el("packageButtons").children.length;
+    const autoCovers = el("autoCoverages").children.length;
+    el("vehicleAge").value = "5";
+    el("vehicleValue").value = "25000";
+    el("analyzeBtn").click();
+    const autoAnalysis = el("autoNote").innerText.includes("Προϊόν:");
+    showLanding();
+    const homeVisible = !el("landingScreen").classList.contains("hidden");
+    const ok = firePackages>0 && fireCovers>0 && autoPackages>0 && autoCovers>0 && autoAnalysis && homeVisible;
+    document.body.dataset.smoke = ok ? "PASS" : `FAIL:${firePackages},${fireCovers},${autoPackages},${autoCovers},${autoAnalysis},${homeVisible}`;
+  } catch (e) { document.body.dataset.smoke = "ERROR:" + e.message; }
+});
+
+</script></div>
 </body></html>
