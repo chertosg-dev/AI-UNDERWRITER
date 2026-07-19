@@ -126,3 +126,67 @@ el("vehicleUse")?.addEventListener("change",()=>{
 });
 
 loadAuto();
+
+
+// ===== v9 BRANCH LANDING =====
+let activeBranch = null;
+
+function showLanding() {
+  activeBranch = null;
+  el("landingScreen").classList.remove("hidden");
+  el("mainApplication").classList.add("hidden");
+}
+
+function openBranch(branch) {
+  activeBranch = branch;
+  el("landingScreen").classList.add("hidden");
+  el("mainApplication").classList.remove("hidden");
+
+  const select = el("product");
+
+  if (branch === "fire") {
+    const fireOption = [...select.options].find(option => !String(option.value).startsWith("auto:"));
+    if (fireOption) {
+      selectedProduct = fireOption.value;
+      select.value = selectedProduct;
+      const productKeys = typeof packageOrder === "function" ? packageOrder(selectedProduct) : [];
+      selectedPackage = productKeys.length ? productKeys[productKeys.length - 1] : selectedPackage;
+    }
+  }
+
+  if (branch === "auto") {
+    const autoOption = [...select.options].find(option => String(option.value).startsWith("auto:"));
+    if (autoOption) {
+      selectedProduct = autoOption.value;
+      select.value = selectedProduct;
+      const p = autoProduct();
+      selectedPackage = p?.packages?.[0]?.id || "";
+    }
+  }
+
+  applyBranchProductFilter();
+  render();
+}
+
+function applyBranchProductFilter() {
+  const select = el("product");
+
+  [...select.options].forEach(option => {
+    const isAutoOption = String(option.value).startsWith("auto:");
+    option.hidden = activeBranch === "fire" ? isAutoOption : activeBranch === "auto" ? !isAutoOption : false;
+  });
+}
+
+el("fireBranchBtn")?.addEventListener("click", () => openBranch("fire"));
+el("autoBranchBtn")?.addEventListener("click", () => openBranch("auto"));
+el("backHomeBtn")?.addEventListener("click", showLanding);
+
+const previousProductHandler = el("product").onchange;
+el("product").onchange = event => {
+  const value = event.target.value;
+  if (activeBranch === "fire" && String(value).startsWith("auto:")) return;
+  if (activeBranch === "auto" && !String(value).startsWith("auto:")) return;
+  if (previousProductHandler) previousProductHandler(event);
+};
+
+showLanding();

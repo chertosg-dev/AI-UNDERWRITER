@@ -6,6 +6,31 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+<section id="landingScreen" class="landing-screen">
+  <div class="landing-card">
+    <div class="brand">
+      <span class="logo"></span>
+      AI Underwriter
+    </div>
+    <h1>Επίλεξε κλάδο</h1>
+    <p class="subtitle">Διάλεξε την κατηγορία που θέλεις να αναλύσεις.</p>
+    <div class="branch-grid">
+      <button id="fireBranchBtn" class="branch-card fire-branch" type="button">
+        <span class="branch-icon">🔥</span>
+        <span class="branch-title">Πυρός</span>
+        <span class="branch-description">Κατοικία και Επιχείρηση</span>
+      </button>
+      <button id="autoBranchBtn" class="branch-card auto-branch" type="button">
+        <span class="branch-icon">🚗</span>
+        <span class="branch-title">Αυτοκίνητα</span>
+        <span class="branch-description">Πακέτα και κανόνες ανάληψης οχημάτων</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<div id="mainApplication" class="hidden">
 <main class="wrap">
 <header class="hero"><div><div class="brand"><span class="logo"></span>AI Underwriter v5</div><h1>Κατοικία & Επιχείρηση</h1><p class="subtitle">Πραγματικά όρια και απαλλαγές από το PDF. Οι καλύψεις εμφανίζονται μόνο ανά επιλεγμένο προϊόν/πακέτο και ανοίγουν σε popup.</p></div><div class="pill">Εθνική · Πυρός & Τεχνικών Ασφαλίσεων</div></header>
 <section class="grid">
@@ -35,4 +60,5 @@
 </main>
 <div class="modal-backdrop" id="modal"><div class="modal"><div class="modal-head"><h3 id="mTitle"></h3><button class="close" id="mClose">×</button></div><div class="modal-body"><div class="row"><strong>Όριο κάλυψης</strong><span id="mLimit"></span></div><div class="row"><strong>Απαλλαγή</strong><span id="mDed"></span></div><div class="row"><strong>Ερμηνεία</strong><span id="mMean"></span></div><div class="row"><strong>Εξαιρέσεις / Προσοχή</strong><span id="mExc"></span></div><div class="row"><strong>Underwriting</strong><span id="mUw"></span></div><div class="row"><strong>Πηγή</strong><span id="mSource"></span></div></div></div></div>
 <div class="toast" id="toast">Αντιγράφηκε</div>
-<script src="app.js"></script></body></html>
+<script src="app.js"></script></div>
+</body></html>
