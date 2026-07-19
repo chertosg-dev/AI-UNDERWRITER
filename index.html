@@ -2,7 +2,7 @@
 <html lang="el">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI Underwriter Εθνικής v10</title>
+<title>AI Underwriter Εθνικής v11</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -32,7 +32,7 @@
 
 <div id="mainApplication" class="hidden">
 <main class="wrap">
-<header class="hero"><div><div class="brand"><span class="logo"></span>AI Underwriter</div><h1>Κατοικία & Επιχείρηση</h1><p class="subtitle">Πραγματικά όρια και απαλλαγές από το PDF. Οι καλύψεις εμφανίζονται μόνο ανά επιλεγμένο προϊόν/πακέτο και ανοίγουν σε popup.</p></div><div class="hero-actions"><button id="backHomeBtn" class="back-home" type="button">← Αρχική</button><div class="pill">Εθνική · Πυρός & Τεχνικών Ασφαλίσεων</div></div></header>
+<header class="hero"><div><div class="brand"><span class="logo"></span>AI Underwriter</div><h1>Κατοικία & Επιχείρηση</h1><p class="subtitle">Πραγματικά όρια και απαλλαγές από το PDF. Οι καλύψεις εμφανίζονται μόνο ανά επιλεγμένο προϊόν/πακέτο και ανοίγουν σε popup.</p></div><div class="hero-actions"><button id="backHomeBtn" class="back-home" type="button">🏠 Αρχική</button><div class="pill">Εθνική · Πυρός & Τεχνικών Ασφαλίσεων</div></div></header>
 <section class="grid">
 <aside class="card">
 <h2 style="margin:0 0 14px">Επιλογές</h2>
@@ -52,9 +52,60 @@
 <label>Σχόλια / κεφάλαια</label><textarea id="notes" placeholder="Π.χ. κεφάλαιο, υπόγειο, μέτρα προστασίας, έτος κατασκευής..."></textarea>
 <button class="btn" id="analyzeBtn">Ανάλυση underwriting</button><button class="btn secondary" id="copyBtn">Αντιγραφή αποτελέσματος</button>
 </aside>
-<section class="card">
-<div class="head"><div><h2 style="margin:0 0 4px">Αποτέλεσμα</h2><div class="muted" id="summary"></div></div><span class="status" id="badge">Έτοιμο</span></div>
-<div class="cards"><div class="mini"><h3>Καλύψεις επιλεγμένου πακέτου</h3><div class="help" id="help"></div><div class="coverage-grid" id="coverages"></div></div><div class="mini"><h3>Κανόνες ανάληψης</h3><div id="rules"></div></div><div class="mini"><h3>Σημείωση</h3><div id="note" class="muted">Πάτησε «Ανάλυση underwriting» για σύνοψη.</div></div></div>
+
+<section id="fireResultPanel" class="card">
+  <div class="head">
+    <div>
+      <h2 style="margin:0 0 4px">Αποτέλεσμα Πυρός</h2>
+      <div class="muted" id="summary"></div>
+    </div>
+    <span class="status" id="badge">Έτοιμο</span>
+  </div>
+  <div class="cards">
+    <div class="mini">
+      <h3>Καλύψεις επιλεγμένου πακέτου</h3>
+      <div class="help" id="help"></div>
+      <div class="coverage-grid" id="coverages"></div>
+    </div>
+    <div class="mini">
+      <h3>Κανόνες ανάληψης Πυρός</h3>
+      <div id="rules"></div>
+    </div>
+    <div class="mini">
+      <h3>Ανάλυση Πυρός</h3>
+      <div id="note" class="muted">Πάτησε «Ανάλυση underwriting» για σύνοψη.</div>
+    </div>
+  </div>
+</section>
+
+<section id="autoResultPanel" class="card hidden">
+  <div class="head">
+    <div>
+      <h2 style="margin:0 0 4px">Αποτέλεσμα Αυτοκινήτου</h2>
+      <div class="muted" id="autoSummary">Αυτοκίνητο</div>
+    </div>
+    <span class="status" id="autoBadge">Έτοιμο</span>
+  </div>
+
+  <div class="cards">
+    <div class="mini">
+      <h3>Καλύψεις πακέτου αυτοκινήτου</h3>
+      <div class="help" id="autoHelp"></div>
+      <div class="coverage-grid" id="autoCoverages"></div>
+    </div>
+
+    <div class="mini">
+      <h3>Κανόνες ανάληψης Αυτοκινήτου</h3>
+      <div id="autoRules"></div>
+    </div>
+
+    <div class="mini">
+      <h3>Ανάλυση Αυτοκινήτου</h3>
+      <div id="autoNote" class="muted">
+        Συμπλήρωσε τα στοιχεία του οχήματος και πάτησε «Ανάλυση underwriting».
+      </div>
+    </div>
+  </div>
 </section>
 </section>
 </main>

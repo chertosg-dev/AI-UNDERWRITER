@@ -20,7 +20,7 @@ el("product").onchange=e=>{selectedProduct=e.target.value;selectedPackage=order(
 initProducts();initBusinesses();render();
 
 
-// ===== v10 MOBILE-SAFE AUTO + LANDING =====
+// ===== v11 SEPARATE FIRE / AUTO SECTIONS =====
 let AUTO = null;
 let activeBranch = null;
 let autoReady = false;
@@ -35,8 +35,8 @@ function autoProduct() {
 }
 
 function autoPack() {
-  const p = autoProduct();
-  return p ? p.packages.find(pack => pack.id === selectedPackage) || null : null;
+  const product = autoProduct();
+  return product ? product.packages.find(p => p.id === selectedPackage) || null : null;
 }
 
 function allowedAutoProductIds() {
@@ -48,14 +48,23 @@ function allowedAutoProductIds() {
 
 function autoCoverages() {
   const pack = autoPack();
-  if (!pack) return [];
+  if (!pack || !AUTO) return [];
   return Object.entries(pack.statuses)
     .filter(([, status]) => status !== "unavailable")
     .map(([id, status]) => ({ ...AUTO.coverages[id], status }));
 }
 
+function setBranchPanels(branch) {
+  const fire = branch === "fire";
+  el("fireResultPanel")?.classList.toggle("hidden", !fire);
+  el("autoResultPanel")?.classList.toggle("hidden", fire);
+  el("businessBox")?.classList.toggle("hidden", !fire || selectedProduct === "home");
+  el("autoBox")?.classList.toggle("hidden", fire);
+}
+
 function refreshAutoProductOptions() {
   if (!AUTO) return;
+
   const select = el("product");
   [...select.options]
     .filter(option => String(option.value).startsWith("auto:"))
@@ -74,51 +83,51 @@ function refreshAutoProductOptions() {
 
 async function loadAuto() {
   try {
-    AUTO = await fetch("auto.json", { cache: "no-store" }).then(response => {
-      if (!response.ok) throw new Error("Αποτυχία φόρτωσης auto.json");
-      return response.json();
-    });
+    const response = await fetch("auto.json", { cache: "no-store" });
+    if (!response.ok) throw new Error("Αποτυχία φόρτωσης auto.json");
+    AUTO = await response.json();
     autoReady = true;
     refreshAutoProductOptions();
-    el("autoBranchBtn").disabled = false;
-    el("autoBranchBtn").classList.remove("loading");
+
+    const button = el("autoBranchBtn");
+    button.disabled = false;
+    button.classList.remove("loading");
   } catch (error) {
     console.error(error);
-    el("autoBranchBtn").disabled = true;
-    el("autoBranchBtn").classList.add("loading");
-    el("autoBranchBtn").querySelector(".branch-description").textContent =
-      "Δεν φορτώθηκαν τα δεδομένα αυτοκινήτου. Κάνε ανανέωση της σελίδας.";
+    const button = el("autoBranchBtn");
+    button.disabled = true;
+    button.classList.add("loading");
+    const text = button.querySelector(".branch-description");
+    if (text) text.textContent = "Δεν φορτώθηκαν τα στοιχεία αυτοκινήτου. Κάνε ανανέωση.";
   }
 }
 
-const fireRender = render;
-const fireAnalyze = analyze;
-const fireCopyResult = copyResult;
+const originalFireRender = render;
+const originalFireAnalyze = analyze;
+const originalFireCopy = copyResult;
 
 function renderAuto() {
-  const p = autoProduct();
+  setBranchPanels("auto");
 
-  el("businessBox").classList.add("hidden");
-  el("autoBox").classList.remove("hidden");
-
-  if (!p) {
+  const product = autoProduct();
+  if (!product) {
     el("packageButtons").innerHTML = "";
-    el("coverages").innerHTML = "";
-    el("help").textContent = "Δεν βρέθηκε διαθέσιμο πακέτο.";
-    el("rules").innerHTML = "<p>Απαιτείται ανανέωση της σελίδας.</p>";
-    el("summary").textContent = "Αυτοκίνητο";
-    el("badge").textContent = "Σφάλμα";
+    el("autoCoverages").innerHTML = "";
+    el("autoHelp").textContent = "Δεν βρέθηκε διαθέσιμο πακέτο αυτοκινήτου.";
+    el("autoRules").innerHTML = "<p>Απαιτείται ανανέωση της σελίδας.</p>";
+    el("autoSummary").textContent = "Αυτοκίνητο";
+    el("autoBadge").textContent = "Σφάλμα";
     return;
+  }
+
+  if (!product.packages.some(p => p.id === selectedPackage)) {
+    selectedPackage = product.packages[0].id;
   }
 
   const packageBox = el("packageButtons");
   packageBox.innerHTML = "";
 
-  if (!p.packages.some(pack => pack.id === selectedPackage)) {
-    selectedPackage = p.packages[0].id;
-  }
-
-  p.packages.forEach(pack => {
+  product.packages.forEach(pack => {
     const button = document.createElement("button");
     button.type = "button";
     button.textContent = pack.title;
@@ -131,10 +140,10 @@ function renderAuto() {
   });
 
   const list = autoCoverages();
-  el("help").textContent =
-    `${list.length} καλύψεις για ${autoPack().title} — υποχρεωτικές και προαιρετικές.`;
+  el("autoHelp").textContent =
+    `${list.length} καλύψεις για ${autoPack().title}. Πάτησε σε μία κάλυψη για λεπτομέρειες.`;
 
-  const grid = el("coverages");
+  const grid = el("autoCoverages");
   grid.innerHTML = "";
 
   list.forEach(coverage => {
@@ -161,90 +170,148 @@ function renderAuto() {
     grid.appendChild(button);
   });
 
-  el("rules").innerHTML =
-    "<ul>" + p.rules.map(rule => `<li>${escapeHtml(rule)}</li>`).join("") + "</ul>";
+  el("autoRules").innerHTML =
+    "<ul>" + product.rules.map(rule => `<li>${escapeHtml(rule)}</li>`).join("") + "</ul>";
 
-  el("summary").textContent = `${p.title} · ${autoPack().title}`;
-  el("badge").textContent = "Αυτοκίνητο";
+  el("autoSummary").textContent = `${product.title} · ${autoPack().title}`;
+  el("autoBadge").textContent = "Αυτοκίνητο";
 }
 
 render = function () {
   if (isAuto()) {
     renderAuto();
-  } else {
-    el("autoBox")?.classList.add("hidden");
-    fireRender();
+    return;
   }
+
+  setBranchPanels("fire");
+  originalFireRender();
 };
 
 analyze = function () {
-  if (!isAuto()) return fireAnalyze();
+  if (!isAuto()) {
+    setBranchPanels("fire");
+    originalFireAnalyze();
+    return;
+  }
 
   renderAuto();
 
-  const p = autoProduct();
+  const product = autoProduct();
+  const pack = autoPack();
   const age = Number(el("vehicleAge").value || 0);
   const value = Number(el("vehicleValue").value || 0);
   const special = el("vehicleSpecial").value;
+  const use = el("vehicleUse").value;
   const warnings = [];
+  let requiresInspection = false;
+  let requiresApproval = false;
+  let eligible = true;
 
-  if (p.id === "fullauto") {
-    if (selectedPackage === "v3" && age > 15)
+  if (product.id === "fullauto") {
+    if (selectedPackage === "v3" && age > 15) {
       warnings.push("Το Full Value παρέχεται για οχήματα έως 15 ετών.");
-    if (selectedPackage === "v4" && age > 12)
+      eligible = false;
+    }
+    if (selectedPackage === "v4" && age > 12) {
       warnings.push("Το Full Premium παρέχεται για οχήματα έως 12 ετών.");
-    if (selectedPackage === "v3" && value && value < 2000)
-      warnings.push("Ελάχιστη αξία Full Value: 2.000€.");
-    if (selectedPackage === "v4" && value && value < 3000)
-      warnings.push("Ελάχιστη αξία Full Premium: 3.000€.");
+      eligible = false;
+    }
+    if (selectedPackage === "v3" && value && value < 2000) {
+      warnings.push("Ελάχιστη ασφαλιστική αξία Full Value: 2.000€.");
+      eligible = false;
+    }
+    if (selectedPackage === "v4" && value && value < 3000) {
+      warnings.push("Ελάχιστη ασφαλιστική αξία Full Premium: 3.000€.");
+      eligible = false;
+    }
   }
 
-  if (p.id === "autoprotect") {
-    if (["extra", "premium"].includes(selectedPackage) && age > 15)
+  if (product.id === "autoprotect") {
+    if (["extra", "premium"].includes(selectedPackage) && age > 15) {
       warnings.push("Τα Auto Protect Extra και Premium παρέχονται έως 15 έτη.");
-    if (selectedPackage === "extra" && value && value < 2000)
-      warnings.push("Ελάχιστη αξία Auto Protect Extra: 2.000€.");
-    if (selectedPackage === "premium" && value && value < 3000)
-      warnings.push("Ελάχιστη αξία Auto Protect Premium: 3.000€.");
+      eligible = false;
+    }
+    if (selectedPackage === "extra" && value && value < 2000) {
+      warnings.push("Ελάχιστη ασφαλιστική αξία Auto Protect Extra: 2.000€.");
+      eligible = false;
+    }
+    if (selectedPackage === "premium" && value && value < 3000) {
+      warnings.push("Ελάχιστη ασφαλιστική αξία Auto Protect Premium: 3.000€.");
+      eligible = false;
+    }
   }
 
-  if (p.id === "fulltruck" && age > 12)
+  if (product.id === "fulltruck" && age > 12) {
     warnings.push("Τα FullTruck παρέχονται για επιλέξιμες χρήσεις έως 12 ετών.");
+    eligible = false;
+  }
 
-  if (value > 50000 || special === "high")
+  if (value > 50000 || special === "high") {
     warnings.push("Για αξία άνω των 50.000€ απαιτείται ειδική προσφορά από την Εταιρία.");
-  if (special === "smart")
-    warnings.push("Για Smart απαιτείται ειδική έγκριση και δεν παρέχεται αντικατάσταση λόγω κλοπής.");
-  if (special === "moto")
-    warnings.push("Δεν παρέχεται κάλυψη κλοπής σε μηχανές και μοτοποδήλατα.");
-  if (special === "transfer")
-    warnings.push("Για transfer / μεταφορά προσωπικού απαιτείται ειδική προσφορά.");
+    requiresApproval = true;
+  }
 
-  if (autoCoverages().some(c => c.name.includes("Ζημιές Ιδίου Οχήματος")))
+  if (special === "smart") {
+    warnings.push("Για Smart απαιτείται ειδική έγκριση και δεν παρέχεται αντικατάσταση λόγω κλοπής.");
+    requiresApproval = true;
+  }
+
+  if (special === "moto" || use === "moto") {
+    warnings.push("Δεν παρέχεται κάλυψη κλοπής σε μηχανές και μοτοποδήλατα.");
+    requiresApproval = true;
+  }
+
+  if (special === "transfer") {
+    warnings.push("Για transfer / μεταφορά προσωπικού απαιτείται ειδική προσφορά.");
+    requiresApproval = true;
+  }
+
+  const mixed = autoCoverages().some(c => c.name.includes("Ζημιές Ιδίου"));
+  if (mixed) {
     warnings.push("Η Μικτή απαιτεί προασφαλιστικό έλεγχο και έγκριση της Εταιρίας.");
+    requiresInspection = true;
+    requiresApproval = true;
+  }
 
   const notes = el("notes").value.trim();
-  el("note").innerHTML = `
-    <p><strong>${escapeHtml(el("summary").textContent)}</strong></p>
-    <p><strong>Ηλικία:</strong> ${age || "Δεν δηλώθηκε"} ·
-       <strong>Αξία:</strong> ${value ? value.toLocaleString("el-GR") + "€" : "Δεν δηλώθηκε"}</p>
+  const statusText = eligible ? "Επιλέξιμο βάσει βασικών ορίων" : "Μη επιλέξιμο βάσει βασικών ορίων";
+
+  el("autoBadge").textContent = eligible ? "Επιλέξιμο" : "Έλεγχος";
+  el("autoNote").innerHTML = `
+    <div class="analysis-status ${eligible ? "ok" : "warning"}">
+      <strong>${statusText}</strong>
+    </div>
+    <p><strong>Προϊόν:</strong> ${escapeHtml(product.title)}</p>
+    <p><strong>Πακέτο:</strong> ${escapeHtml(pack.title)}</p>
+    <p><strong>Ηλικία οχήματος:</strong> ${age || "Δεν δηλώθηκε"}</p>
+    <p><strong>Αξία οχήματος:</strong> ${value ? value.toLocaleString("el-GR") + "€" : "Δεν δηλώθηκε"}</p>
+    <p><strong>Προασφαλιστικός έλεγχος:</strong> ${requiresInspection ? "Ναι" : "Δεν προκύπτει από τα δηλωμένα στοιχεία"}</p>
+    <p><strong>Έγκριση Εταιρίας:</strong> ${requiresApproval ? "Ναι" : "Δεν προκύπτει από τα δηλωμένα στοιχεία"}</p>
     ${warnings.length
-      ? `<p><strong>Παρατηρήσεις:</strong></p><ul>${warnings.map(w => `<li>${escapeHtml(w)}</li>`).join("")}</ul>`
+      ? `<p><strong>Παρατηρήσεις ανάληψης:</strong></p>
+         <ul>${warnings.map(w => `<li>${escapeHtml(w)}</li>`).join("")}</ul>`
       : "<p><strong>Δεν εντοπίστηκε προφανής υπέρβαση των βασικών ορίων.</strong></p>"}
     ${notes ? `<p><strong>Σχόλια:</strong> ${escapeHtml(notes)}</p>` : ""}
   `;
+
+  el("autoResultPanel").scrollIntoView({ behavior: "smooth", block: "start" });
 };
 
 copyResult = async function () {
-  if (!isAuto()) return fireCopyResult();
+  if (!isAuto()) {
+    originalFireCopy();
+    return;
+  }
 
   const text = [
-    el("summary").textContent,
+    el("autoSummary").textContent,
+    el("autoNote").innerText,
+    "",
+    "Καλύψεις:",
     ...autoCoverages().map(c =>
-      `${c.name} (${c.status === "required" ? "Υποχρεωτική" : "Προαιρετική"})\n` +
-      `Όριο: ${c.limit}\nΑπαλλαγή: ${c.deductible}\nΠηγή: ${c.source}`
+      `${c.name} (${c.status === "required" ? "Υποχρεωτική" : "Προαιρετική"})`
     )
-  ].join("\n\n");
+  ].join("\n");
 
   await navigator.clipboard.writeText(text);
   el("toast").classList.add("show");
@@ -253,6 +320,7 @@ copyResult = async function () {
 
 function applyBranchProductFilter() {
   const select = el("product");
+
   [...select.options].forEach(option => {
     const autoOption = String(option.value).startsWith("auto:");
     option.hidden =
@@ -262,26 +330,40 @@ function applyBranchProductFilter() {
   });
 }
 
+function resetSharedInputs() {
+  el("notes").value = "";
+  el("note").innerHTML = "Πάτησε «Ανάλυση underwriting» για σύνοψη.";
+  el("autoNote").innerHTML =
+    "Συμπλήρωσε τα στοιχεία του οχήματος και πάτησε «Ανάλυση underwriting».";
+}
+
 function showLanding() {
   activeBranch = null;
+  resetSharedInputs();
   el("landingScreen").classList.remove("hidden");
   el("mainApplication").classList.add("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function openFireBranch() {
   activeBranch = "fire";
+
   const select = el("product");
   const option = [...select.options].find(o => !String(o.value).startsWith("auto:"));
+
   if (option) {
     selectedProduct = option.value;
     select.value = option.value;
     const packages = packageOrder(selectedProduct);
     selectedPackage = packages[packages.length - 1];
   }
+
   applyBranchProductFilter();
   el("landingScreen").classList.add("hidden");
   el("mainApplication").classList.remove("hidden");
-  render();
+  setBranchPanels("fire");
+  originalFireRender();
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function openAutoBranch() {
@@ -293,32 +375,34 @@ function openAutoBranch() {
   const select = el("product");
   const option = [...select.options].find(o => String(o.value).startsWith("auto:"));
 
+  el("landingScreen").classList.add("hidden");
+  el("mainApplication").classList.remove("hidden");
+  setBranchPanels("auto");
+
   if (!option) {
-    el("landingScreen").classList.add("hidden");
-    el("mainApplication").classList.remove("hidden");
-    el("businessBox").classList.add("hidden");
-    el("autoBox").classList.remove("hidden");
     el("packageButtons").innerHTML = "";
-    el("coverages").innerHTML = "";
-    el("help").textContent = "Δεν υπάρχει τυποποιημένο πακέτο για την επιλεγμένη χρήση.";
-    el("rules").innerHTML = "<p><strong>Απαιτείται ειδική προσφορά / έγκριση Κλάδου.</strong></p>";
+    el("autoCoverages").innerHTML = "";
+    el("autoHelp").textContent =
+      "Δεν υπάρχει τυποποιημένο πακέτο για την επιλεγμένη χρήση.";
+    el("autoRules").innerHTML =
+      "<p><strong>Απαιτείται ειδική προσφορά / έγκριση Κλάδου.</strong></p>";
     return;
   }
 
   selectedProduct = option.value;
   select.value = option.value;
   selectedPackage = autoProduct().packages[0].id;
-
   applyBranchProductFilter();
-  el("landingScreen").classList.add("hidden");
-  el("mainApplication").classList.remove("hidden");
   renderAuto();
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 el("fireBranchBtn").addEventListener("click", openFireBranch);
+
 el("autoBranchBtn").disabled = true;
 el("autoBranchBtn").classList.add("loading");
 el("autoBranchBtn").addEventListener("click", openAutoBranch);
+
 el("backHomeBtn")?.addEventListener("click", showLanding);
 
 const originalProductChange = el("product").onchange;
@@ -334,6 +418,7 @@ el("product").onchange = event => {
 
   if (activeBranch === "fire" && !String(value).startsWith("auto:")) {
     originalProductChange?.(event);
+    setBranchPanels("fire");
   }
 };
 
@@ -343,13 +428,13 @@ el("vehicleUse")?.addEventListener("change", () => {
 
   if (!allowed.length) {
     el("packageButtons").innerHTML = "";
-    el("coverages").innerHTML = "";
-    el("help").textContent =
+    el("autoCoverages").innerHTML = "";
+    el("autoHelp").textContent =
       "Για αυτή τη χρήση δεν υπάρχει τυποποιημένο πακέτο στο διαθέσιμο εγχειρίδιο.";
-    el("rules").innerHTML =
+    el("autoRules").innerHTML =
       "<p><strong>Απαιτείται εξατομικευμένη προσφορά / έγκριση Κλάδου.</strong></p>";
-    el("summary").textContent = "Αυτοκίνητο · Ειδική χρήση";
-    el("badge").textContent = "Ειδική έγκριση";
+    el("autoSummary").textContent = "Αυτοκίνητο · Ειδική χρήση";
+    el("autoBadge").textContent = "Ειδική έγκριση";
     return;
   }
 
