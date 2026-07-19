@@ -1,0 +1,391 @@
+{
+  "coverages": {
+    "third_party": {
+      "name": "Αστική Ευθύνη έναντι τρίτων",
+      "limit": "1.300.000€ ανά θύμα για σωματικές βλάβες και 1.300.000€ για υλικές ζημιές ανά γεγονός.",
+      "deductible": "Χωρίς απαλλαγή.",
+      "meaning": "Υποχρεωτική αστική ευθύνη από την κυκλοφορία.",
+      "source": "PDF σελ. 7"
+    },
+    "fire_liability": {
+      "name": "Αστική Ευθύνη Πυρός",
+      "limit": "15.000€ για σωματικές βλάβες και 15.000€ για υλικές ζημιές.",
+      "deductible": "Χωρίς απαλλαγή.",
+      "meaning": "Ζημιές προς τρίτους από πυρκαγιά που δεν συνδέεται με την κυκλοφορία.",
+      "source": "PDF σελ. 8"
+    },
+    "uninsured": {
+      "name": "Υλικές Ζημιές από Ανασφάλιστο Όχημα",
+      "limit": "100.000€ ετησίως.",
+      "deductible": "Χωρίς απαλλαγή.",
+      "meaning": "Ζημιές από ανασφάλιστο όχημα με αποκλειστική και αποδεδειγμένη υπαιτιότητά του.",
+      "source": "PDF σελ. 7"
+    },
+    "driver": {
+      "name": "Προσωπικό Ατύχημα Οδηγού",
+      "limit": "ΕΙΧ: 5.000€ ή 15.000€. Φορτηγά/Λεωφορεία: 20.000€. Ιατρικά έως 500€ και επίδομα 50€/ημέρα έως 30 ημέρες.",
+      "deductible": "Χωρίς απαλλαγή.",
+      "meaning": "Θάνατος, ανικανότητα, ιατρικά έξοδα και επίδομα νοσηλείας οδηγού.",
+      "source": "PDF σελ. 9 και 15"
+    },
+    "glass": {
+      "name": "Θραύση Κρυστάλλων",
+      "limit": "ΕΙΧ: 1.000€ ή 3.000€. Φορτηγά: 3.000€. Λεωφορεία ΔΧ: 7.000€. Λεωφορεία ΙΧ: 6.500€.",
+      "deductible": "150€. Μηδενική σε συνεργαζόμενο εξειδικευμένο συνεργείο για ΕΙΧ και φορτηγά έως 3,5 τόνους.",
+      "meaning": "Θραύση κρυστάλλων από τυχαίο γεγονός.",
+      "source": "PDF σελ. 10 και 15"
+    },
+    "legal": {
+      "name": "Νομική Προστασία",
+      "limit": "ΕΙΧ: 3.000€, 5.000€ ή 15.000€. Λοιπές χρήσεις έως 15.000€.",
+      "deductible": "Χωρίς απαλλαγή.",
+      "meaning": "Δικαστικές και εξωδικαστικές δαπάνες.",
+      "source": "PDF σελ. 10 και 15"
+    },
+    "airbags": {
+      "name": "Κάλυψη Αερόσακων",
+      "limit": "1.000€ ανά ασφαλιστικό έτος.",
+      "deductible": "Χωρίς απαλλαγή.",
+      "meaning": "Αντικατάσταση αερόσακων και ζωνών ασφαλείας μετά από υπαίτιο ατύχημα.",
+      "source": "PDF σελ. 12"
+    },
+    "outside": {
+      "name": "Έξοδα Ατυχήματος εκτός Φιλικού",
+      "limit": "Υλικές ζημιές έως 6.500€ και ιατρικές/νοσηλεία έως 12.000€.",
+      "deductible": "Χωρίς απαλλαγή.",
+      "meaning": "Όταν το υπαίτιο όχημα είναι ασφαλισμένο σε εταιρία εκτός Φιλικού Διακανονισμού.",
+      "source": "PDF σελ. 11"
+    },
+    "fire": {
+      "name": "Πυρκαγιά Οχήματος",
+      "limit": "Μέχρι την τρέχουσα εμπορική αξία.",
+      "deductible": "Χωρίς απαλλαγή.",
+      "meaning": "Πυρκαγιά, κεραυνός, έκρηξη και αυτόματη ανάφλεξη.",
+      "source": "PDF σελ. 8"
+    },
+    "terror": {
+      "name": "Τρομοκρατικές Ενέργειες Πυρός",
+      "limit": "Μέχρι την ασφαλισμένη αξία.",
+      "deductible": "Χωρίς απαλλαγή.",
+      "meaning": "Πυρκαγιά ή έκρηξη από τρομοκρατικές πράξεις.",
+      "source": "PDF σελ. 8"
+    },
+    "natural": {
+      "name": "Φυσικά Φαινόμενα",
+      "limit": "Μέχρι την ασφαλισμένη αξία.",
+      "deductible": "200€ ή 100€ σε συνεργαζόμενο συνεργείο.",
+      "meaning": "Πλημμύρα, χαλάζι, τυφώνας ή σεισμός.",
+      "source": "PDF σελ. 9"
+    },
+    "theft": {
+      "name": "Ολική & Μερική Κλοπή",
+      "limit": "Ολική: τρέχουσα εμπορική αξία. Πρόσθετα σταθερά εξαρτήματα έως 500€.",
+      "deductible": "Δεν αναγράφεται απαλλαγή.",
+      "meaning": "Ολική κλοπή και αφαίρεση σταθερά προσδεμένων εξαρτημάτων.",
+      "source": "PDF σελ. 8"
+    },
+    "replacement": {
+      "name": "Αντικατάσταση λόγω Κλοπής / Πυρκαγιάς",
+      "limit": "45 ημέρες σε κλοπή και 15 ημέρες σε πυρκαγιά.",
+      "deductible": "Χωρίς απαλλαγή.",
+      "meaning": "Όχημα αντικατάστασης για ΕΙΧ με ελάχιστη αξία 3.000€.",
+      "source": "PDF σελ. 8"
+    },
+    "keys": {
+      "name": "Αντικατάσταση Κλειδιών",
+      "limit": "Κόστος αντικατάστασης κλειδιών.",
+      "deductible": "Χωρίς απαλλαγή.",
+      "meaning": "Κλοπή ή απώλεια κλειδιών μετά από 30 ημέρες και δήλωση στην Αστυνομία.",
+      "source": "PDF σελ. 9"
+    },
+    "own_theft": {
+      "name": "Ζημιές Ιδίου Συνεπεία Κλοπής",
+      "limit": "Μέχρι την ασφαλισμένη αξία.",
+      "deductible": "400€.",
+      "meaning": "Ζημιές όσο το όχημα βρίσκεται στην κατοχή του κλέφτη.",
+      "source": "PDF σελ. 10"
+    },
+    "own": {
+      "name": "Ζημιές Ιδίου Οχήματος (Μικτή)",
+      "limit": "Μέχρι την ασφαλισμένη αξία.",
+      "deductible": "ΕΙΧ: 400/700/1.000/1.300/1.600€. Από αξία 30.000€ δεν επιτρέπεται 400€. Φορτηγά/Μηχανήματα/ΔΧ: 2% της αξίας, ελάχιστο 400€ ή 700€ για αξία άνω 30.000€.",
+      "meaning": "Ζημιές με υπαιτιότητα ασφαλισμένου. Απαιτείται προασφαλιστικός έλεγχος και έγκριση.",
+      "source": "PDF σελ. 9"
+    },
+    "malicious": {
+      "name": "Κακόβουλες Ζημιές Ιδίου",
+      "limit": "Μέχρι την ασφαλισμένη αξία.",
+      "deductible": "Ελάχιστο 400€ έως αξία 30.000€ και 700€ για μεγαλύτερη αξία.",
+      "meaning": "Κακόβουλες ενέργειες τρίτων, μαζί με τη Μικτή.",
+      "source": "PDF σελ. 10"
+    },
+    "tow": {
+      "name": "Τοπική Ρυμούλκηση",
+      "limit": "Ρυμούλκηση μετά από ατύχημα.",
+      "deductible": "Χωρίς απαλλαγή.",
+      "meaning": "Όταν το όχημα δεν μπορεί να κινηθεί με ασφάλεια.",
+      "source": "PDF σελ. 10"
+    },
+    "road": {
+      "name": "Οδική Βοήθεια / FULL Οδική Βοήθεια",
+      "limit": "Πλήρης οδική βοήθεια. Στη FULL όχημα αντικατάστασης έως 7 ημέρες.",
+      "deductible": "Χωρίς απαλλαγή.",
+      "meaning": "Μεταφορά οχήματος, επαναπατρισμός και λοιπές παροχές.",
+      "source": "PDF σελ. 10-11"
+    },
+    "tool": {
+      "name": "Αστική Ευθύνη ως Εργαλείο",
+      "limit": "15.000€ / 30.000€ / 50.000€ / 75.000€ / 100.000€ / 200.000€.",
+      "deductible": "Χωρίς απαλλαγή.",
+      "meaning": "Ευθύνη από μηχάνημα που αποτελεί εξάρτημα του οχήματος.",
+      "source": "PDF σελ. 7 και 15"
+    }
+  },
+  "products": [
+    {
+      "id": "fullauto",
+      "title": "FullAuto",
+      "rules": [
+        "Full Standard: βασικό εμπορικό πακέτο ΕΙΧ, με τις καλύψεις του πρώην FullAuto V2.",
+        "Full Value: ελάχιστη ασφαλιστική αξία 2.000€ και ηλικία οχήματος έως 15 έτη.",
+        "Full Premium: ελάχιστη ασφαλιστική αξία 3.000€ και ηλικία οχήματος έως 12 έτη.",
+        "Όρια συνεργάτη ΕΙΧ: έως 50.000€ για καινούργια/έως 2 ετών και έως 25.000€ για μεταχειρισμένα 2-15 ετών.",
+        "Η Μικτή απαιτεί προασφαλιστικό έλεγχο και έγκριση της Εταιρίας."
+      ],
+      "packages": [
+        {
+          "id": "v2",
+          "title": "Full Standard",
+          "statuses": {
+            "third_party": "required",
+            "fire_liability": "required",
+            "uninsured": "required",
+            "driver": "optional",
+            "glass": "optional",
+            "legal": "required",
+            "airbags": "optional",
+            "outside": "optional",
+            "fire": "unavailable",
+            "terror": "unavailable",
+            "natural": "unavailable",
+            "theft": "unavailable",
+            "replacement": "unavailable",
+            "keys": "required",
+            "own_theft": "unavailable",
+            "own": "unavailable",
+            "malicious": "unavailable",
+            "tow": "required",
+            "road": "optional"
+          }
+        },
+        {
+          "id": "v3",
+          "title": "Full Value",
+          "statuses": {
+            "third_party": "required",
+            "fire_liability": "required",
+            "uninsured": "required",
+            "driver": "required",
+            "glass": "optional",
+            "legal": "required",
+            "airbags": "optional",
+            "outside": "optional",
+            "fire": "required",
+            "terror": "required",
+            "natural": "required",
+            "theft": "required",
+            "replacement": "required",
+            "keys": "required",
+            "own_theft": "required",
+            "own": "unavailable",
+            "malicious": "unavailable",
+            "tow": "required",
+            "road": "optional"
+          }
+        },
+        {
+          "id": "v4",
+          "title": "Full Premium",
+          "statuses": {
+            "third_party": "required",
+            "fire_liability": "required",
+            "uninsured": "required",
+            "driver": "required",
+            "glass": "required",
+            "legal": "required",
+            "airbags": "unavailable",
+            "outside": "optional",
+            "fire": "required",
+            "terror": "required",
+            "natural": "required",
+            "theft": "required",
+            "replacement": "required",
+            "keys": "required",
+            "own_theft": "required",
+            "own": "required",
+            "malicious": "required",
+            "tow": "required",
+            "road": "optional"
+          }
+        }
+      ]
+    },
+    {
+      "id": "autoprotect",
+      "title": "Auto Protect",
+      "rules": [
+        "Extra: αξία ≥2.000€ και ηλικία ≤15 έτη.",
+        "Premium: αξία ≥3.000€ και ηλικία ≤15 έτη.",
+        "Όρος εγγύησης αξίας 3 ετών για επιλέξιμα πρωτοκυκλοφορούντα ΕΙΧ έως 50.000€."
+      ],
+      "packages": [
+        {
+          "id": "classic",
+          "title": "Auto Protect Classic",
+          "statuses": {
+            "third_party": "required",
+            "uninsured": "required",
+            "driver": "optional",
+            "glass": "optional",
+            "legal": "optional",
+            "fire": "unavailable",
+            "terror": "unavailable",
+            "natural": "unavailable",
+            "theft": "unavailable",
+            "replacement": "unavailable",
+            "own_theft": "unavailable",
+            "own": "unavailable",
+            "malicious": "unavailable",
+            "tow": "required",
+            "road": "optional"
+          }
+        },
+        {
+          "id": "extra",
+          "title": "Auto Protect Extra",
+          "statuses": {
+            "third_party": "required",
+            "uninsured": "required",
+            "driver": "required",
+            "glass": "optional",
+            "legal": "required",
+            "fire": "required",
+            "terror": "required",
+            "natural": "required",
+            "theft": "required",
+            "replacement": "required",
+            "own_theft": "unavailable",
+            "own": "unavailable",
+            "malicious": "unavailable",
+            "tow": "required",
+            "road": "optional"
+          }
+        },
+        {
+          "id": "premium",
+          "title": "Auto Protect Premium",
+          "statuses": {
+            "third_party": "required",
+            "uninsured": "required",
+            "driver": "required",
+            "glass": "required",
+            "legal": "required",
+            "fire": "required",
+            "terror": "required",
+            "natural": "required",
+            "theft": "required",
+            "replacement": "required",
+            "own_theft": "required",
+            "own": "required",
+            "malicious": "required",
+            "tow": "required",
+            "road": "optional"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fulltruck",
+      "title": "FullTruck",
+      "rules": [
+        "Για ΦΙΧ, ΦΙΧ Αγροτικά και ΦΙΧ Ψυγεία έως 20 φορολογήσιμους ίππους και ηλικία έως 12 έτη.",
+        "Όρια συνεργάτη λοιπών χρήσεων: 50.000€ έως 2 ετών και 25.000€ για ηλικία 2-12 ετών.",
+        "Η Μικτή απαιτεί προασφαλιστικό έλεγχο και έγκριση."
+      ],
+      "packages": [
+        {
+          "id": "v1",
+          "title": "FullTruck V1",
+          "statuses": {
+            "third_party": "required",
+            "fire_liability": "required",
+            "tool": "optional",
+            "uninsured": "required",
+            "driver": "optional",
+            "glass": "optional",
+            "legal": "optional",
+            "airbags": "optional",
+            "outside": "optional",
+            "fire": "unavailable",
+            "terror": "unavailable",
+            "natural": "unavailable",
+            "theft": "unavailable",
+            "own_theft": "unavailable",
+            "own": "unavailable",
+            "malicious": "unavailable",
+            "tow": "required",
+            "road": "optional"
+          }
+        },
+        {
+          "id": "v3",
+          "title": "FullTruck V3",
+          "statuses": {
+            "third_party": "required",
+            "fire_liability": "required",
+            "tool": "optional",
+            "uninsured": "required",
+            "driver": "required",
+            "glass": "optional",
+            "legal": "required",
+            "airbags": "optional",
+            "outside": "optional",
+            "fire": "required",
+            "terror": "required",
+            "natural": "required",
+            "theft": "required",
+            "own_theft": "required",
+            "own": "unavailable",
+            "malicious": "unavailable",
+            "tow": "required",
+            "road": "optional"
+          }
+        },
+        {
+          "id": "v4",
+          "title": "FullTruck V4",
+          "statuses": {
+            "third_party": "required",
+            "fire_liability": "required",
+            "tool": "optional",
+            "uninsured": "required",
+            "driver": "required",
+            "glass": "optional",
+            "legal": "required",
+            "airbags": "unavailable",
+            "outside": "optional",
+            "fire": "required",
+            "terror": "required",
+            "natural": "required",
+            "theft": "required",
+            "own_theft": "required",
+            "own": "required",
+            "malicious": "required",
+            "tow": "required",
+            "road": "optional"
+          }
+        }
+      ]
+    }
+  ]
+}

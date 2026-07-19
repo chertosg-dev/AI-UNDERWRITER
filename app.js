@@ -18,3 +18,111 @@ function analyze(){render();const list=covers(selectedProduct,selectedPackage), 
 function copyResult(){const text=[el("summary").textContent,...covers(selectedProduct,selectedPackage).map(c=>c.name+"\nΌριο: "+c.limit+"\nΑπαλλαγή: "+c.deductible+"\nΠηγή: "+c.source)].join("\n\n");navigator.clipboard.writeText(text).then(()=>{el("toast").classList.add("show");setTimeout(()=>el("toast").classList.remove("show"),1500)})}
 el("product").onchange=e=>{selectedProduct=e.target.value;selectedPackage=order(selectedProduct).slice(-1)[0];render()};el("businessSearch").oninput=e=>{initBusinesses(e.target.value);renderSummary()};el("businessType").onchange=renderSummary;el("analyzeBtn").onclick=analyze;el("copyBtn").onclick=copyResult;el("mClose").onclick=()=>el("modal").classList.remove("show");el("modal").onclick=e=>{if(e.target.id==="modal")el("modal").classList.remove("show")};document.addEventListener("keydown",e=>{if(e.key==="Escape")el("modal").classList.remove("show")});
 initProducts();initBusinesses();render();
+let AUTO=null;
+async function loadAuto(){
+  AUTO=await fetch("auto.json").then(r=>r.json());
+  refreshAutoProductOptions();
+}
+
+function allowedAutoProductIds(){
+  const use=el("vehicleUse")?.value || "eix";
+  if(["fix","fix_agro","fix_fridge"].includes(use)) return ["fulltruck"];
+  if(use==="eix") return ["fullauto","autoprotect"];
+  return [];
+}
+
+function refreshAutoProductOptions(){
+  const select=el("product");
+  [...select.options].filter(o=>String(o.value).startsWith("auto:")).forEach(o=>o.remove());
+  const allowed=allowedAutoProductIds();
+  AUTO.products.filter(p=>allowed.includes(p.id)).forEach(p=>{
+    const o=document.createElement("option");
+    o.value="auto:"+p.id;
+    o.textContent=p.title;
+    select.appendChild(o);
+  });
+}
+function isAuto(){return String(selectedProduct).startsWith("auto:")}
+function autoProduct(){return AUTO?.products.find(p=>p.id===selectedProduct.split(":")[1])}
+function autoPack(){return autoProduct()?.packages.find(p=>p.id===selectedPackage)}
+function autoCoverages(){const p=autoPack();if(!p)return[];return Object.entries(p.statuses).filter(([,s])=>s!=="unavailable").map(([id,status])=>({...AUTO.coverages[id],status}))}
+
+const baseRender=render;
+render=function(){
+ if(!isAuto()){el("autoBox")?.classList.add("hidden");return baseRender();}
+ const use=el("vehicleUse")?.value||"eix";
+ const allowed=allowedAutoProductIds();
+ const p=autoProduct();
+ if(!allowed.length){
+   el("businessBox").classList.add("hidden");el("autoBox")?.classList.remove("hidden");
+   el("packageButtons").innerHTML="";el("coverages").innerHTML="";
+   el("packageHelp").textContent="Δεν υπάρχει τυποποιημένο πακέτο για αυτή τη χρήση στο διαθέσιμο εγχειρίδιο.";
+   el("businessRules").innerHTML="<p><strong>Απαιτείται εξατομικευμένη προσφορά / έγκριση Κλάδου.</strong></p>";
+   el("selectionSummary").textContent="Αυτοκίνητο · Ειδική χρήση";
+   el("statusBadge").textContent="Ειδική έγκριση";
+   return;
+ }
+ if(!p)return;
+ el("businessBox").classList.add("hidden");el("autoBox")?.classList.remove("hidden");
+ const pb=el("packageButtons");pb.innerHTML="";
+ if(!p.packages.some(x=>x.id===selectedPackage))selectedPackage=p.packages[0].id;
+ p.packages.forEach(x=>{const b=document.createElement("button");b.type="button";b.textContent=x.title;b.className=x.id===selectedPackage?"active":"";b.onclick=()=>{selectedPackage=x.id;render()};pb.appendChild(b)});
+ const list=autoCoverages();
+ el("packageHelp").textContent=list.length+" καλύψεις (υποχρεωτικές και προαιρετικές) για "+autoPack().title;
+ const box=el("coverages");box.innerHTML="";
+ list.forEach(c=>{const b=document.createElement("button");b.type="button";b.className="coverage";b.innerHTML=c.name+'<br><span class="tag">'+(c.status==="required"?"Υποχρεωτική":"Προαιρετική")+' · '+c.source+'</span>';b.onclick=()=>{el("modalTitle").textContent=c.name;el("modalLimit").textContent=c.limit;el("modalDeductible").textContent=c.deductible;el("modalMeaning").textContent=c.meaning;el("modalExclusions").textContent="Ισχύουν οι γενικοί και ειδικοί όροι της κάλυψης.";el("modalUnderwriting").textContent="Έλεγχος χρήσης, ηλικίας, αξίας, κατάστασης και τυχόν απαίτησης προασφαλιστικού ελέγχου.";el("modalSource").textContent=c.source;el("modal").classList.add("show")};box.appendChild(b)});
+ el("businessRules").innerHTML="<ul>"+p.rules.map(x=>"<li>"+x+"</li>").join("")+"</ul>";
+ el("selectionSummary").textContent=p.title+" · "+autoPack().title;el("statusBadge").textContent="Αυτοκίνητο";
+}
+
+const baseAnalyze=analyze;
+analyze=function(){
+ if(!isAuto())return baseAnalyze();
+ render();
+ const p=autoProduct(),age=Number(el("vehicleAge").value||0),value=Number(el("vehicleValue").value||0),sp=el("vehicleSpecial").value,w=[];
+ if(p.id==="fullauto"){
+  if(selectedPackage==="v3"&&age>15)w.push("Το Full Value παρέχεται έως 15 έτη.");
+  if(selectedPackage==="v4"&&age>12)w.push("Το Full Premium παρέχεται έως 12 έτη.");
+  if(selectedPackage==="v3"&&value&&value<2000)w.push("Ελάχιστη αξία Full Value: 2.000€.");
+  if(selectedPackage==="v4"&&value&&value<3000)w.push("Ελάχιστη αξία Full Premium: 3.000€.");
+ }
+ if(p.id==="autoprotect"){
+  if(["extra","premium"].includes(selectedPackage)&&age>15)w.push("Τα Extra/Premium παρέχονται έως 15 έτη.");
+  if(selectedPackage==="extra"&&value&&value<2000)w.push("Ελάχιστη αξία Extra: 2.000€.");
+  if(selectedPackage==="premium"&&value&&value<3000)w.push("Ελάχιστη αξία Premium: 3.000€.");
+ }
+ if(p.id==="fulltruck"&&age>12)w.push("Τα FullTruck παρέχονται έως 12 έτη.");
+ if(value>50000||sp==="high")w.push("Άνω των 50.000€ απαιτείται ειδική προσφορά από την Εταιρία.");
+ if(sp==="smart")w.push("Για Smart απαιτείται ειδική έγκριση και δεν παρέχεται αντικατάσταση λόγω κλοπής.");
+ if(sp==="moto")w.push("Δεν παρέχεται κλοπή σε μηχανές και μοτοποδήλατα.");
+ if(sp==="transfer")w.push("Για transfer / μεταφορά προσωπικού απαιτείται ειδική προσφορά.");
+ if(autoCoverages().some(c=>c.name.includes("Ζημιές Ιδίου Οχήματος")))w.push("Η Μικτή απαιτεί προασφαλιστικό έλεγχο και έγκριση Εταιρίας.");
+ el("uwNote").innerHTML="<p><strong>"+el("selectionSummary").textContent+"</strong></p><p><strong>Ηλικία:</strong> "+(age||"δεν δηλώθηκε")+" · <strong>Αξία:</strong> "+(value?value.toLocaleString("el-GR")+"€":"δεν δηλώθηκε")+"</p>"+(w.length?"<ul>"+w.map(x=>"<li>"+x+"</li>").join("")+"</ul>":"<p><strong>Δεν εντοπίστηκε προφανής υπέρβαση των βασικών ορίων.</strong></p>");
+}
+
+const oldChange=el("product").onchange;
+el("product").onchange=e=>{selectedProduct=e.target.value;if(isAuto()){selectedPackage=autoProduct()?.packages[0]?.id||"";render()}else if(oldChange)oldChange(e)};
+
+el("vehicleUse")?.addEventListener("change",()=>{
+  refreshAutoProductOptions();
+  const allowed=allowedAutoProductIds();
+  const currentId=isAuto()?selectedProduct.split(":")[1]:"";
+  if(!allowed.includes(currentId)){
+    if(allowed.length){
+      selectedProduct="auto:"+allowed[0];
+      el("product").value=selectedProduct;
+      selectedPackage=autoProduct()?.packages[0]?.id||"";
+      render();
+    }else{
+      const use=el("vehicleUse").value;
+      el("packageButtons").innerHTML="";
+      el("coverages").innerHTML="";
+      el("packageHelp").textContent="Για τη συγκεκριμένη χρήση δεν υπάρχει τυποποιημένο πακέτο στο διαθέσιμο εγχειρίδιο.";
+      el("businessRules").innerHTML="<p><strong>Απαιτείται εξατομικευμένη προσφορά και έγκριση από τη Διεύθυνση Ασφάλισης Αυτοκινήτου.</strong></p>";
+      el("selectionSummary").textContent="Αυτοκίνητο · Ειδική χρήση";
+      el("statusBadge").textContent="Ειδική έγκριση";
+    }
+  }
+});
+
+loadAuto();

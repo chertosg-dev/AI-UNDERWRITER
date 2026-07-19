@@ -4,8 +4,6 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AI Underwriter Εθνικής v5</title>
 <link rel="stylesheet" href="styles.css">
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icon-192.png">
 </head>
 <body>
 <main class="wrap">
@@ -15,7 +13,17 @@
 <h2 style="margin:0 0 14px">Επιλογές</h2>
 <label>Προϊόν</label><select id="product"></select>
 <div id="businessBox"><label>Είδος επιχείρησης</label><input id="businessSearch" type="search" placeholder="Αναζήτηση επαγγέλματος..."><div class="small" id="businessCount"></div><select id="businessType" size="8"></select></div>
-<label>Πακέτο</label><div class="segmented" id="packageButtons"></div>
+<div id="autoBox" class="hidden">
+<label>Χρήση Οχήματος</label>
+<select id="vehicleUse">
+  <option value="eix">Επιβατικό Ι.Χ.</option>
+  <option value="fix">Φορτηγό Ι.Χ.</option>
+  <option value="fix_agro">Φ.Ι.Χ. Αγροτικό</option>
+  <option value="fix_fridge">Φ.Ι.Χ. Ψυγείο</option>
+  <option value="taxi">Ταξί / Επιβατικό Δ.Χ.</option>
+  <option value="bus">Λεωφορείο</option>
+  <option value="moto">Μοτοσυκλέτα / Μοτοποδήλατο</option>
+</select><label>Ηλικία οχήματος</label><input id="vehicleAge" type="number" min="0" placeholder="π.χ. 5"><label>Αξία οχήματος (€)</label><input id="vehicleValue" type="number" min="0" step="100" placeholder="π.χ. 25000"><label>Ειδική περίπτωση</label><select id="vehicleSpecial"><option value="none">Καμία</option><option value="smart">ΕΙΧ Smart</option><option value="moto">Μοτοσυκλέτα / Μοτοποδήλατο</option><option value="transfer">Transfer / μεταφορά προσωπικού</option><option value="high">Άνω των 50.000€</option></select></div><label>Πακέτο</label><div class="segmented" id="packageButtons"></div>
 <label>Σχόλια / κεφάλαια</label><textarea id="notes" placeholder="Π.χ. κεφάλαιο, υπόγειο, μέτρα προστασίας, έτος κατασκευής..."></textarea>
 <button class="btn" id="analyzeBtn">Ανάλυση underwriting</button><button class="btn secondary" id="copyBtn">Αντιγραφή αποτελέσματος</button>
 </aside>
